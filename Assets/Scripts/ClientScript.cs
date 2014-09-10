@@ -82,7 +82,7 @@ public class ClientScript : MonoBehaviour {
     }
     private void InitializeEnemy()
     {
-		Debug.Log ("jag är en Enemy");
+		Debug.Log ("jag är en korv");
     }
 
     private void InitializeHelper()
