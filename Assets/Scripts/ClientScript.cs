@@ -87,7 +87,7 @@ public class ClientScript : MonoBehaviour {
 
     private void InitializeHelper()
     {
-        throw new System.NotImplementedException();
+		Debug.Log ("hejsan");
     }
 
     private void InitializePlayer()

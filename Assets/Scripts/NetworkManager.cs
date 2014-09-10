@@ -96,7 +96,6 @@ public class NetworkManager : MonoBehaviour {
             helpers.Remove(player);
         else if (enemies.Contains(player))
             enemies.Remove(player);
-
     }
 
     private void DisconnectGame()
