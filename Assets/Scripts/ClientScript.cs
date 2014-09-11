@@ -82,12 +82,12 @@ public class ClientScript : MonoBehaviour {
     }
     private void InitializeEnemy()
     {
-        throw new System.NotImplementedException();
+		Debug.Log ("jag är en korv");
     }
 
     private void InitializeHelper()
     {
-        throw new System.NotImplementedException();
+		Debug.Log ("hejsan");
     }
 
     private void InitializePlayer()
