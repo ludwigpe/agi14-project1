@@ -6,6 +6,7 @@ public class IceControls : MonoBehaviour {
 	public float jumpSpeed = 8.0F;
 	public float gravity = 10.0F;
     public float friction = 5.0F;
+    public float breakPower = 10.0F;
     public float rotationSpeed = 100.0F;
 	private Vector3 moveDirection = Vector3.zero;
 	// Use this for initialization
@@ -25,6 +26,10 @@ public class IceControls : MonoBehaviour {
                 // player pressed up-key so applie some force to the movement
                 Vector3 force = transform.forward * speed * Time.deltaTime;
                 moveDirection += force;
+            }
+            if (Input.GetKey(KeyCode.DownArrow)) {
+                Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
+                moveDirection += breakForce;
             }
 			if (Input.GetButton("Jump"))
 				moveDirection.y = jumpSpeed;
