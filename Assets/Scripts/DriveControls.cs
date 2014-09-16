@@ -28,7 +28,7 @@ public class DriveControls : MonoBehaviour {
             moveDirection.y = 0;
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                // player pressed up-key so applie some force to the movement
+                // player pressed up-key so apply some force to the movement
                 currentSpeed += speed;
             }
             if (Input.GetKey(KeyCode.DownArrow))
