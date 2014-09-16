@@ -69,7 +69,7 @@ public class GameController : MonoBehaviour {
     /// </summary>
     private void UpdateTimeText(){
         secondsPassed = (int)Mathf.Floor(Time.timeSinceLevelLoad);
-        timeText.text = "Time: " + secondsPassed;
+        timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
     }
 
     /// <summary>

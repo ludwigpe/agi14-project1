@@ -3,6 +3,10 @@ using System.Collections;
 
 public class DeathCheck : MonoBehaviour
 {
+	// Death
+	private const int DEATH_HEIGHT = 2;
+	private const int DESTROY_HEIGHT = 120;
+
     // Link with GameController
     private GameController gameController;
 
@@ -23,10 +27,12 @@ public class DeathCheck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y < -100)
-        {
-            gameController.GameLost = true;
-            Destroy(this.gameObject);
-        }
+        if (transform.position.y < -DEATH_HEIGHT) {
+			gameController.GameLost = true;
+		} 
+		else if (transform.position.y < -DESTROY_HEIGHT) {
+			Destroy(this.gameObject);
+		}
+
     }
 }
