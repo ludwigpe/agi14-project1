@@ -11,7 +11,7 @@ public class IceControls : MonoBehaviour
     public float rotationSpeed = 100.0F;
 	private Vector3 moveDirection = Vector3.zero;
     
-    private const float MIN_VEL_MAG = 0.1f; // If velocity is lesser than this, set it to zero
+    private const float MIN_VEL_MAG = 0.1f;
 
     // AudioSources
     public AudioSource audio_source_break;
@@ -19,13 +19,11 @@ public class IceControls : MonoBehaviour
     private bool breakSoundStarted = false;
 
     // Sounds
-    public AudioClip sound_move_pacman;
     public AudioClip sound_jump;
 	
     // Use this for initialization
 	void Start () 
     {
-        audio.clip = sound_move_pacman;
 	}
 	
 	// Update is called once per frame
@@ -50,6 +48,7 @@ public class IceControls : MonoBehaviour
                 // player pressed up-key so applie some force to the movement
                 Vector3 force = transform.forward * speed * Time.deltaTime;
                 moveDirection += force;
+                
                 if (!audio_source_move.isPlaying)
                 {
                     audio_source_move.Play();
