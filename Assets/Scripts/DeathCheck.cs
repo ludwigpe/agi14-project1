@@ -5,7 +5,7 @@ public class DeathCheck : MonoBehaviour
 {
 	// Death
 	private const int DEATH_HEIGHT = 2;
-	private const int DESTROY_HEIGHT = 120;
+	private const int DESTROY_HEIGHT = 500;
 
     // Link with GameController
     private GameController gameController;
@@ -34,7 +34,7 @@ public class DeathCheck : MonoBehaviour
         if (transform.position.y < -DEATH_HEIGHT) {
 			gameController.GameLost = true;
 		} 
-		else if (transform.position.y < -DESTROY_HEIGHT) {
+		if (transform.position.y < -DESTROY_HEIGHT) {
 			Destroy(this.gameObject);
 		}
     }

@@ -10,9 +10,17 @@ public class IceControls : MonoBehaviour
     public float breakPower = 10.0F;
     public float rotationSpeed = 100.0F;
 	private Vector3 moveDirection = Vector3.zero;
+    
+    private const float MIN_VEL_MAG = 0.1f; // If velocity is lesser than this, set it to zero
+
+    // AudioSources
+    public AudioSource audio_source_break;
+    public AudioSource audio_source_move;
+    private bool breakSoundStarted = false;
 
     // Sounds
     public AudioClip sound_move_pacman;
+    public AudioClip sound_jump;
 	
     // Use this for initialization
 	void Start () 
@@ -24,6 +32,13 @@ public class IceControls : MonoBehaviour
 	void Update () 
     {
 	    CharacterController controller = GetComponent<CharacterController>();
+
+        // Stop break sound when button is released
+        if (breakSoundStarted && !Input.GetKey(KeyCode.DownArrow))
+        {
+            audio_source_break.Stop();
+            breakSoundStarted = false;
+        }
     
         // Rotate player around y-axis
         transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
@@ -35,17 +50,28 @@ public class IceControls : MonoBehaviour
                 // player pressed up-key so applie some force to the movement
                 Vector3 force = transform.forward * speed * Time.deltaTime;
                 moveDirection += force;
-                if (!audio.isPlaying)
+                if (!audio_source_move.isPlaying)
                 {
-                    audio.Play();
+                    audio_source_move.Play();
                 }
             }
             if (Input.GetKey(KeyCode.DownArrow)) 
             {
                 Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                 moveDirection += breakForce;
+
+                // Make sure to only play break sound once
+                if (!audio_source_break.isPlaying && !breakSoundStarted && controller.velocity.magnitude > MIN_VEL_MAG)
+                {
+                    audio_source_break.Play();
+                    breakSoundStarted = true;
+                }
             }
-			if (Input.GetButton("Jump")) moveDirection.y = jumpSpeed;
+            if (Input.GetButton("Jump"))
+            {
+                AudioSource.PlayClipAtPoint(sound_jump, transform.position);
+                moveDirection.y = jumpSpeed;
+            }
             
             float fric = Mathf.Clamp(100 - friction, 0, 100);
             fric = fric / 100; // convert to percentage
