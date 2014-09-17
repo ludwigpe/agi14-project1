@@ -10,7 +10,9 @@ public class DeathCheck : MonoBehaviour
     // Link with GameController
     private GameController gameController;
 
-    // Use this for initialization
+    /// <summary>
+    ///  Use this for initialization
+    /// </summary>
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
@@ -24,7 +26,9 @@ public class DeathCheck : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame.
+    /// </summary>
     void Update()
     {
         if (transform.position.y < -DEATH_HEIGHT) {
@@ -33,6 +37,5 @@ public class DeathCheck : MonoBehaviour
 		else if (transform.position.y < -DESTROY_HEIGHT) {
 			Destroy(this.gameObject);
 		}
-
     }
 }
