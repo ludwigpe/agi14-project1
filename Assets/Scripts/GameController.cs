@@ -29,13 +29,76 @@ public class GameController : MonoBehaviour
     public AudioClip sound_victory;
     public AudioClip sound_lost;
 
+    // Prefabs
+    public Transform ghost_prefab; // Prefab for ai ghosts
+
+    // AI Spawn Points (to disable a certain AI simple skip giving it a spawn pos)
+    public Transform spawn_pos_blinky;
+    public Transform spawn_pos_inky;
+    public Transform spawn_pos_pinky;
+    public Transform spawn_pos_clyde;
+
+    // AI Materials
+    public Material inky_mat;
+    public Material pinky_mat;
+    public Material clyde_mat;
+
 	// Use this for initialization
 	void Start () 
     {
 		scoreCounter = 0;
         secondsPassed = 0;
 		UpdateScore ();
+        Instantiate_AI();
 	}
+
+    /// <summary>
+    /// Creates and setups the four AI ghosts.
+    /// </summary>
+    void Instantiate_AI()
+    {
+        Transform ai_ghost;
+        FollowTargetScript follow_target_script;
+        Renderer mesh_renderer;
+
+        // Blinky
+        if (spawn_pos_blinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_blinky.position, spawn_pos_blinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+        }
+
+        // Pinky
+        if (spawn_pos_pinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_pinky.position, spawn_pos_pinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = pinky_mat;
+        }
+
+        // Inky
+        if (spawn_pos_inky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_inky.position, spawn_pos_inky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = inky_mat;
+        }
+
+        // Clyde
+        if (spawn_pos_clyde)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_clyde.position, spawn_pos_clyde.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = clyde_mat;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () 

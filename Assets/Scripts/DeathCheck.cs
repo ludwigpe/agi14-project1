@@ -27,6 +27,19 @@ public class DeathCheck : MonoBehaviour
     }
 
     /// <summary>
+    /// Something has collided with Pacman.
+    /// </summary>
+    /// <param name="other">Collider object.</param>
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            gameController.GameLost = true;
+            this.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
     /// Update is called once per frame.
     /// </summary>
     void Update()
