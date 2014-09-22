@@ -1,10 +1,21 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 public class GameController : MonoBehaviour {
 
+    [DllImport ("UniWii")]
+    private static extern void wiimote_start();
+    [DllImport ("UniWii")]
+    private static extern void wiimote_stop();
+    [DllImport ("UniWii")]
+    private static extern int wiimote_count();
+
     // Connection to player object
     public GameObject player;
+    public Transform spawnPoint;
+    private bool playerCreated = false;
 
     // Game time 
     public GUIText timeText;
@@ -26,11 +37,23 @@ public class GameController : MonoBehaviour {
 	private int scoreCounter;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
 		scoreCounter = 0;
         secondsPassed = 0;
 		UpdateScore ();
+//        wiimote_start();
+
 	}
+
+    void InstatiatePlayer()
+    {
+        playerCreated = true;
+        GameObject playerObject;
+        playerObject = Instantiate(player, spawnPoint.position, Quaternion.identity) as GameObject;
+        playerObject.GetComponent<FPWiiControls>().gc = this;
+        playerObject.GetComponent<ShakeWiiControls>().gc = this;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -54,7 +77,25 @@ public class GameController : MonoBehaviour {
         }
 	}
 
-    void OnGUI(){
+    void OnGUI()
+    {
+        int c = wiimote_count();
+        GUILayout.BeginVertical("box");
+        if (c == 0)
+        {
+            GUILayout.Label("Press 1 and 2 on the wii controller!");
+        }
+        else if (c == 1)
+        {
+            GUILayout.Label("Waiting for second player");
+            GUILayout.Label("Press 1 and 2 on the wii controller!");
+        } 
+        else
+        {
+//            if(!playerCreated)
+//                InstatiatePlayer();
+        }
+
         if (gameIsOver){
             // Create a restart button
             if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 30, 200, 40), "Restart"))
@@ -62,6 +103,7 @@ public class GameController : MonoBehaviour {
                 Application.LoadLevel("start");
             }
         }
+
     }
 
     /// <summary>
@@ -114,6 +156,30 @@ public class GameController : MonoBehaviour {
 	void UpdateScore() {
 		scoreText.text = "Score: " + scoreCounter;
 	}
+    /// <summary>
+    /// Gets wiimote index for the third person controls.
+    /// </summary>
+    /// <returns>The third person index.</returns>
+    public int GetThirdPersonIndex()
+    {
+        return 0;
+    }
+    /// <summary>
+    /// Gets wiimote index for the first person controls.
+    /// </summary>
+    /// <returns>The first person index.</returns>
+    public int GetFirstPersonIndex()
+    {
+        return 1;
+    }
+    /// <summary>
+    /// Raises the application quit event.
+    /// Close all connections to wiimotes
+    /// </summary>
+    void OnApplicationQuit() 
+    {
+//        wiimote_stop();
+    }
 
     #region Accessors
     public bool GameLost{

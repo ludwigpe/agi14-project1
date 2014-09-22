@@ -13,7 +13,11 @@ public class IceControls : MonoBehaviour {
 	void Start () {
  
 	}
-	
+	void OnGUI()
+	{
+		float velocity = moveDirection.magnitude;
+		GUILayout.Label("velocity: " + velocity);
+	}
 	// Update is called once per frame
 	void Update () {
 	    CharacterController controller = GetComponent<CharacterController>();
