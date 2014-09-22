@@ -17,10 +17,11 @@ public class GameController : MonoBehaviour {
     public Transform spawnPoint;
     private bool playerCreated = false;
 
-    // Game time 
+
+    // Game time
     public GUIText timeText;
     private int secondsPassed;
-    private const int MAX_TIME = 255;
+    private const int MAX_TIME = 255; // In seconds, max time that a game session is allowed to take
 
 	// Keeps track of nr of pellets left, when zero => victory
 	private int nrPelletsLeft;
@@ -38,8 +39,26 @@ public class GameController : MonoBehaviour {
 	public GUIText scoreText;
 	private int scoreCounter;
 
+    // Sound clips
+    public AudioClip sound_victory;
+    public AudioClip sound_lost;
+
+    // Prefabs
+    public Transform ghost_prefab; // Prefab for ai ghosts
+
+    // AI Spawn Points (to disable a certain AI simple skip giving it a spawn pos)
+    public Transform spawn_pos_blinky;
+    public Transform spawn_pos_inky;
+    public Transform spawn_pos_pinky;
+    public Transform spawn_pos_clyde;
+
+    // AI Materials
+    public Material inky_mat;
+    public Material pinky_mat;
+    public Material clyde_mat;
+
 	// Use this for initialization
-	void Start () 
+	void Start ()
     {
         ResetGame();
 		UpdateScore ();
@@ -58,9 +77,57 @@ public class GameController : MonoBehaviour {
         Camera.main.GetComponent<SmoothFollow>().target = playerObject.transform;
 
     }
-	
+    /// <summary>
+    /// Creates and setups the four AI ghosts.
+    /// </summary>
+    void Instantiate_AI()
+    {
+        Transform ai_ghost;
+        FollowTargetScript follow_target_script;
+        Renderer mesh_renderer;
+
+        // Blinky
+        if (spawn_pos_blinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_blinky.position, spawn_pos_blinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+        }
+
+        // Pinky
+        if (spawn_pos_pinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_pinky.position, spawn_pos_pinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = pinky_mat;
+        }
+
+        // Inky
+        if (spawn_pos_inky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_inky.position, spawn_pos_inky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = inky_mat;
+        }
+
+        // Clyde
+        if (spawn_pos_clyde)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_clyde.position, spawn_pos_clyde.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = clyde_mat;
+        }
+    }
+
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (!gameIsOver)
         {
             UpdateTimeText();
@@ -71,6 +138,7 @@ public class GameController : MonoBehaviour {
                 victoryText.guiText.enabled = true;
                 Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
+                AudioSource.PlayClipAtPoint(sound_victory, transform.position);
 
             }
             else if (gameLost)
@@ -78,11 +146,11 @@ public class GameController : MonoBehaviour {
                 failureText.guiText.enabled = true;
                 Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
-
+                AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
         }
         else{
-        }   
+        }
 	}
 
     void OnGUI()
@@ -101,7 +169,7 @@ public class GameController : MonoBehaviour {
             {
                 GUILayout.Label("Waiting for second player");
                 GUILayout.Label("Press 1 and 2 on the wii controller!");
-            } 
+            }
             else
             {
                 if(gameLost || gameWon)
@@ -124,38 +192,43 @@ public class GameController : MonoBehaviour {
 
             }
             GUILayout.EndArea();
-        } 
+        }
 
-    }
+	}
+
 
     /// <summary>
     /// Updates the time text to time passed since beginning of the game in seconds.
     /// </summary>
-    private void UpdateTimeText(){
+
+    private void UpdateTimeText()
+    {
         secondsPassed = (int)Mathf.Floor(Time.timeSinceLevelLoad);
         timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
-
     }
 
     /// <summary>
     /// Check victory/losing conditions.
     /// </summary>
-    private void CheckVictoryConditions(){
-        if (nrPelletsLeft <= 0){
+    private void CheckVictoryConditions()
+    {
+        if (nrPelletsLeft <= 0)
+        {
             gameWon = true;
         }
-        else if (secondsPassed > MAX_TIME){
+        else if (secondsPassed >= MAX_TIME)
+        {
             gameLost = true;
-//            Destroy(player.gameObject);
-//            playerCreated = false;
+            Destroy(player.gameObject);
         }
     }
-	
+
 	/// <summary>
 	/// Adds points to the score.
 	/// </summary>
 	/// <param name="points">Amount of points to add.</param>
-	public void AddScore(int points){
+	public void AddScore(int points)
+    {
 		scoreCounter += points;
 		UpdateScore ();
 	}
@@ -163,23 +236,30 @@ public class GameController : MonoBehaviour {
 	/// <summary>
 	/// Increments the pellet counter.
 	/// </summary>
-	public void IncrementPelletCounter(){
+
+	public void IncrementPelletCounter()
+    {
 		nrPelletsLeft++;
 	}
 
 	/// <summary>
 	/// Decrements the pellet counter.
 	/// </summary>
-	public void DecrementPelletCounter(){
+
+	public void DecrementPelletCounter()
+    {
+
 		nrPelletsLeft--;
 	}
 
 	/// <summary>
 	/// Updates the score.
 	/// </summary>
-	void UpdateScore() {
+	void UpdateScore()
+    {
 		scoreText.text = "Score: " + scoreCounter;
 	}
+
     /// <summary>
     /// Gets wiimote index for the third person controls.
     /// </summary>
@@ -200,7 +280,7 @@ public class GameController : MonoBehaviour {
     /// Raises the application quit event.
     /// Close all connections to wiimotes
     /// </summary>
-    void OnApplicationQuit() 
+    void OnApplicationQuit()
     {
         wiimote_stop();
     }
@@ -219,20 +299,9 @@ public class GameController : MonoBehaviour {
 
     }
 
-    IEnumerator FadeEndScreen(GUIText gui)
+    public bool GameLost
     {
-        for (float f = 1f; f >= 0; f -= 0.1f) 
-        {
-            Color c = gui.color;
-            c.a = f;
-            gui.color = c;
-            yield return new WaitForSeconds(.1f);
-        }
-        ResetGame();
 
-    }
-    #region Accessors
-    public bool GameLost{
         get
         {
             return gameLost;

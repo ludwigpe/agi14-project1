@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DriveControls : MonoBehaviour {
+public class DriveControls : MonoBehaviour 
+{
     public float speed = 6.0F;
     public float breakSpeed = 1.0F;
     public float jumpSpeed = 8.0F;
@@ -10,13 +11,15 @@ public class DriveControls : MonoBehaviour {
     public float rotationSpeed = 100.0F;
     private Vector3 moveDirection = Vector3.zero;
     public float currentSpeed = 0.0F;
-	// Use this for initialization
-	void Start () {
 	
-	}
+    // Use this for initialization
+	void Start () 
+    {
+    }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         CharacterController controller = GetComponent<CharacterController>();
 
         // Rotate player around y-axis
@@ -40,11 +43,7 @@ public class DriveControls : MonoBehaviour {
             currentSpeed *= fric;
             moveDirection *= currentSpeed;
 
-            if (Input.GetButton("Jump"))
-                moveDirection.y = jumpSpeed;
-
-
-            
+            if (Input.GetButton("Jump")) moveDirection.y = jumpSpeed;  
         }
         
         moveDirection.y -= gravity * Time.deltaTime;
