@@ -40,7 +40,7 @@ public class ShakeWiiControls : MonoBehaviour {
     [DllImport ("UniWii")]
     private static extern double wiimote_getBatteryLevel( int which );
 
-    private bool DEBUGGING = false;
+    private bool DEBUGGING = true;
 
     public GameController gc;
     public int flickThreshold = 25;
@@ -58,9 +58,9 @@ public class ShakeWiiControls : MonoBehaviour {
     // Use this for initialization
     void Start () 
     {
-        wiimote_start();
-//        wiiControllerIndex = gc.GetThirdPersonIndex();
-        wiiControllerIndex = 0;
+
+        wiiControllerIndex = gc.GetThirdPersonIndex();
+//        wiiControllerIndex = 0;
     }
     void OnGUI()
     {
@@ -121,15 +121,8 @@ public class ShakeWiiControls : MonoBehaviour {
             int[] values = {accX, accY, accZ};
             int maxAcc = Mathf.Max(values);
 
-            if(wiimote_available(1))
-            {
-                float accXP2 = wiimote_getAccX (1) -centerOffset;
-                transform.Rotate(0, accXP2 * rotationSpeed * Time.deltaTime, 0);
-            }
-
-
             if (controller.isGrounded) {
-                moveDirection.y = 0;
+
                 if (maxAcc > flickThreshold)
                 {   
                     float speed = (maxAcc - flickThreshold)*flickScale;
@@ -142,10 +135,6 @@ public class ShakeWiiControls : MonoBehaviour {
                     Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                     moveDirection += breakForce;
                 }
-                if (wiimote_available(1) && wiimote_getButtonA(1))
-                {
-                    moveDirection.y = jumpSpeed;
-                }
 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
                 fric = fric / 100; // convert to percentage
@@ -153,13 +142,13 @@ public class ShakeWiiControls : MonoBehaviour {
                 if(moveDirection.magnitude < 0.1)
                     moveDirection = Vector3.zero;
             }
-            moveDirection.y -= gravity * Time.deltaTime;
+
             controller.Move(moveDirection * Time.deltaTime);
         }
 
     }
     void OnApplicationQuit() 
     {
-        wiimote_stop();
+
     }
 }

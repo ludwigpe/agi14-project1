@@ -30,7 +30,9 @@ public class GameController : MonoBehaviour {
     public GUIText failureText;
 	private bool gameLost = false;
     private bool gameWon = false;
-    private bool gameIsOver = false;
+    private bool gameIsOver = true;
+    private string playerName = "";
+    private const int MAX_NAME_LENGTH = 3;
 
 	// Score counter
 	public GUIText scoreText;
@@ -39,20 +41,22 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-		scoreCounter = 0;
-        secondsPassed = 0;
+        ResetGame();
 		UpdateScore ();
-//        wiimote_start();
+        wiimote_start();
 
 	}
 
     void InstatiatePlayer()
     {
+
         playerCreated = true;
         GameObject playerObject;
         playerObject = Instantiate(player, spawnPoint.position, Quaternion.identity) as GameObject;
         playerObject.GetComponent<FPWiiControls>().gc = this;
         playerObject.GetComponent<ShakeWiiControls>().gc = this;
+        Camera.main.GetComponent<SmoothFollow>().target = playerObject.transform;
+
     }
 	
 	// Update is called once per frame
@@ -65,44 +69,62 @@ public class GameController : MonoBehaviour {
             if (gameWon)
             {
                 victoryText.guiText.enabled = true;
+                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
+
             }
             else if (gameLost)
             {
                 failureText.guiText.enabled = true;
+                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
+
             }
         }
         else{
-        }
+        }   
 	}
 
     void OnGUI()
     {
         int c = wiimote_count();
-        GUILayout.BeginVertical("box");
-        if (c == 0)
-        {
-            GUILayout.Label("Press 1 and 2 on the wii controller!");
-        }
-        else if (c == 1)
-        {
-            GUILayout.Label("Waiting for second player");
-            GUILayout.Label("Press 1 and 2 on the wii controller!");
-        } 
-        else
-        {
-//            if(!playerCreated)
-//                InstatiatePlayer();
-        }
 
-        if (gameIsOver){
-            // Create a restart button
-            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 30, 200, 40), "Restart"))
+
+        if (gameIsOver)
+        {
+            GUILayout.BeginArea(new Rect(Screen.width/2 - 70, Screen.height/2 -100, 140, 200));
+            if (c == 0)
             {
-                Application.LoadLevel("start");
+                GUILayout.Label("Press 1 and 2 on the wii controller!");
             }
-        }
+            else if (c == 1)
+            {
+                GUILayout.Label("Waiting for second player");
+                GUILayout.Label("Press 1 and 2 on the wii controller!");
+            } 
+            else
+            {
+                if(gameLost || gameWon)
+                {
+                    if(GUILayout.Button("Reset game"))
+                    {
+                        Application.LoadLevel("start");
+                    }
+                    playerName = GUILayout.TextField(playerName, MAX_NAME_LENGTH);
+
+                }
+                else
+                {
+                    if(GUILayout.Button("Start Game"))
+                    {
+                        InstatiatePlayer();
+                        gameIsOver = false;
+                    }
+                }
+
+            }
+            GUILayout.EndArea();
+        } 
 
     }
 
@@ -112,6 +134,7 @@ public class GameController : MonoBehaviour {
     private void UpdateTimeText(){
         secondsPassed = (int)Mathf.Floor(Time.timeSinceLevelLoad);
         timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
+
     }
 
     /// <summary>
@@ -123,7 +146,8 @@ public class GameController : MonoBehaviour {
         }
         else if (secondsPassed > MAX_TIME){
             gameLost = true;
-            Destroy(player.gameObject);
+//            Destroy(player.gameObject);
+//            playerCreated = false;
         }
     }
 	
@@ -178,9 +202,35 @@ public class GameController : MonoBehaviour {
     /// </summary>
     void OnApplicationQuit() 
     {
-//        wiimote_stop();
+        wiimote_stop();
     }
 
+    void ResetGame()
+    {
+        gameIsOver = true;
+        gameWon = false;
+        gameLost = false;
+        playerCreated = false;
+
+        scoreCounter = 0;
+        secondsPassed = 0;
+        victoryText.enabled = false;
+        failureText.enabled = false;
+
+    }
+
+    IEnumerator FadeEndScreen(GUIText gui)
+    {
+        for (float f = 1f; f >= 0; f -= 0.1f) 
+        {
+            Color c = gui.color;
+            c.a = f;
+            gui.color = c;
+            yield return new WaitForSeconds(.1f);
+        }
+        ResetGame();
+
+    }
     #region Accessors
     public bool GameLost{
         get

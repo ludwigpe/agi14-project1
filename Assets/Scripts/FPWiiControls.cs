@@ -31,13 +31,51 @@ public class FPWiiControls : MonoBehaviour {
     public float gravity = 10.0F;
     private Vector3 moveDirection = Vector3.zero;
     private int wiiControllerIndex;
+    private bool DEBUGGING = false;
     #endregion
     
     // Use this for initialization
     void Start () {
-//        wiiControllerIndex = gc.GetFirstPersonIndex();
-        wiiControllerIndex = 1;
+        wiiControllerIndex = gc.GetFirstPersonIndex();
+//        wiiControllerIndex = 1;
     }
+
+    void OnGUI()
+    {
+        if (DEBUGGING)
+        {
+            GUILayout.BeginVertical("box");
+            int c = wiimote_count();
+            if (c > 0)
+            {
+                
+                for (int i=0; i < c; i++)
+                {
+                    GUILayout.Label("Wiimote " + i + " found!");
+                }
+                
+                byte accX = wiimote_getAccX(wiiControllerIndex);
+                byte accY = wiimote_getAccY(wiiControllerIndex);
+                byte accZ = wiimote_getAccZ(wiiControllerIndex);
+                
+                double battery = wiimote_getBatteryLevel(wiiControllerIndex);
+                GUILayout.Label("AccX: " + accX);
+                GUILayout.Label("AccY: " + accY);
+                GUILayout.Label("AccZ: " + accZ);
+                
+                GUILayout.Label("Battery: " + battery);
+                
+                
+            } else
+            {
+                GUILayout.Label("Press the '1' and '2' buttons on your Wii Remote.");
+            }
+            
+            GUILayout.EndHorizontal();
+        }
+        
+    }
+
     
     // Update is called once per frame
     void Update () {
@@ -49,6 +87,7 @@ public class FPWiiControls : MonoBehaviour {
             
             transform.Rotate(0, accX * rotationSpeed * Time.deltaTime, 0);
             if (controller.isGrounded) {
+                moveDirection.y = 0;
                 if (wiimote_getButtonA(wiiControllerIndex))
                     moveDirection.y = jumpSpeed;
             }
