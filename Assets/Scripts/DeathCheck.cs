@@ -35,7 +35,13 @@ public class DeathCheck : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             gameController.GameLost = true;
-            this.gameObject.SetActive(false);
+
+            MonoBehaviour[] scriptComponents = this.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scriptComponents)
+            {
+                script.enabled = false;
+            }
+            other.audio.Stop();
         }
     }
 
