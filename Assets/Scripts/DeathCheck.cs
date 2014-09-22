@@ -34,7 +34,6 @@ public class DeathCheck : MonoBehaviour
             {
                 script.enabled = false;
             }
-            other.audio.Stop();
             this.camera.enabled = false;
         }
     }
@@ -45,7 +44,7 @@ public class DeathCheck : MonoBehaviour
         if (transform.position.y < -DEATH_HEIGHT) {
 			gameController.GameLost = true;
             this.camera.enabled = false;
-		} 
+		}
 		else if (transform.position.y < -DESTROY_HEIGHT) {
 			Destroy(this.gameObject);
 		}

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
+<<<<<<< HEAD
 public class GameController : MonoBehaviour {
 
     [DllImport ("UniWii")]
@@ -13,6 +14,14 @@ public class GameController : MonoBehaviour {
     private static extern int wiimote_count();
 
     public bool DEBUGGING;
+=======
+/// <summary>
+/// The GameController component is responsible for maintaining overall
+/// gameplay functionality such as spawning AI and so forth.
+/// </summary>
+public class GameController : MonoBehaviour
+{
+>>>>>>> 5f0b5ce... High Score System
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
@@ -59,7 +68,7 @@ public class GameController : MonoBehaviour {
     public Material pinky_mat;
     public Material clyde_mat;
 
-	// Use this for initialization
+	/// Use this for initialization
 	void Start ()
     {
         ResetGame();
@@ -71,7 +80,7 @@ public class GameController : MonoBehaviour {
 
     void InstatiatePlayer()
     {
-       
+
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity) as GameObject;
         player.GetComponent<FPWiiControls>().gc = this;
         player.GetComponent<ShakeWiiControls>().gc = this;
@@ -144,16 +153,18 @@ public class GameController : MonoBehaviour {
             {
                 Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 victoryText.guiText.enabled = true;
-//                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
-
+                MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+                foreach (MonoBehaviour script in scriptComponents)
+                {
+                    script.enabled = false;
+                }
             }
             else if (gameLost)
             {
                 Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 failureText.guiText.enabled = true;
-//                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
@@ -163,7 +174,7 @@ public class GameController : MonoBehaviour {
 	}
 
     void OnGUI()
-    {   
+    {
         int c = 2;
         if(!DEBUGGING)
             c = wiimote_count();
@@ -231,7 +242,11 @@ public class GameController : MonoBehaviour {
         else if (secondsPassed >= MAX_TIME)
         {
             gameLost = true;
-//            Destroy(playerPrefab.gameObject);
+            MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scriptComponents)
+            {
+                script.enabled = false;
+            }
         }
     }
 
@@ -334,6 +349,14 @@ public class GameController : MonoBehaviour {
         set
         {
             gameWon = value;
+        }
+    }
+
+    public int Score
+    {
+        get
+        {
+            return scoreCounter;
         }
     }
     #endregion
