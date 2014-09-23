@@ -27,16 +27,28 @@ public class DeathCheck : MonoBehaviour
     }
 
     /// <summary>
-    /// Something has collided with Pacman.
+    /// Something has collided with the ControllerCollider.
     /// </summary>
-    /// <param name="other">Collider object.</param>
-    void OnTriggerEnter(Collider other)
+    /// <param name="collider">Collider object.</param>
+    void OnControllerColliderHit(ControllerColliderHit collider)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
+        {
+            Kill();
+        }
+    }
+
+    /// <summary>
+    /// Disables unit and marks the game as lost.
+    /// </summary>
+    public void Kill()
+    {
+        bool gameRunning = !gameController.GameLost && !gameController.GameWon;
+        if (gameRunning) 
         {
             gameController.GameLost = true;
 
-            MonoBehaviour[] scriptComponents = this.GetComponents<MonoBehaviour>();
+            MonoBehaviour[] scriptComponents = GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scriptComponents)
             {
                 script.enabled = false;
