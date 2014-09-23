@@ -33,6 +33,7 @@ public class FollowTargetScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
         // Stop idle sound when game is over
         if (gameController.GameLost || gameController.GameWon)
         {
@@ -40,12 +41,22 @@ public class FollowTargetScript : MonoBehaviour {
         }
 
 		// Update the target destination every frame when the two objects are close to eachother
+        if (!target)
+            return;
+
 		if (Vector3.Distance(transform.position, target.position) <= persistentChaseDistance)
 			UpdateDestination();
 	}
 
 	// Update this objects target destination.
 	void UpdateDestination () {
-		agent.SetDestination(target.position);
+        if (!target)
+        {
+            agent.SetDestination(this.transform.position);
+        } else
+        {
+            agent.SetDestination(target.position);
+        }
+		
 	}
 }

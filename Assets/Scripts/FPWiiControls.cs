@@ -36,8 +36,8 @@ public class FPWiiControls : MonoBehaviour {
     
     // Use this for initialization
     void Start () {
-        wiiControllerIndex = gc.GetFirstPersonIndex();
-//        wiiControllerIndex = 1;
+//        wiiControllerIndex = gc.GetFirstPersonIndex();
+        wiiControllerIndex = 1;
     }
 
     void OnGUI()

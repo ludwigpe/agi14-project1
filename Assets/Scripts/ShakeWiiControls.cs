@@ -59,8 +59,8 @@ public class ShakeWiiControls : MonoBehaviour {
     void Start () 
     {
 
-        wiiControllerIndex = gc.GetThirdPersonIndex();
-//        wiiControllerIndex = 0;
+//        wiiControllerIndex = gc.GetThirdPersonIndex();
+        wiiControllerIndex = 0;
     }
     void OnGUI()
     {

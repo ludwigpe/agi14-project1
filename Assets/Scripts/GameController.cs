@@ -12,16 +12,18 @@ public class GameController : MonoBehaviour {
     [DllImport ("UniWii")]
     private static extern int wiimote_count();
 
+    public bool DEBUGGING;
     // Connection to player object
-    public GameObject player;
+    public GameObject playerPrefab;
+    private GameObject player;
     public Transform spawnPoint;
-    private bool playerCreated = false;
+//    private bool playerCreated = false;
 
 
     // Game time
     public GUIText timeText;
     private int secondsPassed;
-    private const int MAX_TIME = 255; // In seconds, max time that a game session is allowed to take
+    private const int MAX_TIME = 60; // In seconds, max time that a game session is allowed to take
 
 	// Keeps track of nr of pellets left, when zero => victory
 	private int nrPelletsLeft;
@@ -62,19 +64,24 @@ public class GameController : MonoBehaviour {
     {
         ResetGame();
 		UpdateScore ();
-        wiimote_start();
+        if(!DEBUGGING)
+            wiimote_start();
 
 	}
 
     void InstatiatePlayer()
     {
-
-        playerCreated = true;
-        GameObject playerObject;
-        playerObject = Instantiate(player, spawnPoint.position, Quaternion.identity) as GameObject;
-        playerObject.GetComponent<FPWiiControls>().gc = this;
-        playerObject.GetComponent<ShakeWiiControls>().gc = this;
-        Camera.main.GetComponent<SmoothFollow>().target = playerObject.transform;
+       
+        player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity) as GameObject;
+        player.GetComponent<FPWiiControls>().gc = this;
+        player.GetComponent<ShakeWiiControls>().gc = this;
+        if (DEBUGGING)
+        {
+            player.GetComponent<FPWiiControls>().enabled = false;
+            player.GetComponent<ShakeWiiControls>().enabled = false;
+        }
+        Camera.main.GetComponent<SmoothFollow>().target = player.transform;
+        Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
 
     }
     /// <summary>
@@ -135,16 +142,18 @@ public class GameController : MonoBehaviour {
 
             if (gameWon)
             {
+                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 victoryText.guiText.enabled = true;
-                Destroy(GameObject.FindGameObjectWithTag("Player"));
+//                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
 
             }
             else if (gameLost)
             {
+                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 failureText.guiText.enabled = true;
-                Destroy(GameObject.FindGameObjectWithTag("Player"));
+//                Destroy(GameObject.FindGameObjectWithTag("Player"));
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
@@ -154,8 +163,10 @@ public class GameController : MonoBehaviour {
 	}
 
     void OnGUI()
-    {
-        int c = wiimote_count();
+    {   
+        int c = 2;
+        if(!DEBUGGING)
+            c = wiimote_count();
 
 
         if (gameIsOver)
@@ -186,6 +197,7 @@ public class GameController : MonoBehaviour {
                     if(GUILayout.Button("Start Game"))
                     {
                         InstatiatePlayer();
+                        Instantiate_AI();
                         gameIsOver = false;
                     }
                 }
@@ -219,7 +231,7 @@ public class GameController : MonoBehaviour {
         else if (secondsPassed >= MAX_TIME)
         {
             gameLost = true;
-            Destroy(player.gameObject);
+//            Destroy(playerPrefab.gameObject);
         }
     }
 
@@ -282,7 +294,8 @@ public class GameController : MonoBehaviour {
     /// </summary>
     void OnApplicationQuit()
     {
-        wiimote_stop();
+        if(!DEBUGGING)
+            wiimote_stop();
     }
 
     void ResetGame()
@@ -290,7 +303,7 @@ public class GameController : MonoBehaviour {
         gameIsOver = true;
         gameWon = false;
         gameLost = false;
-        playerCreated = false;
+//        playerCreated = false;
 
         scoreCounter = 0;
         secondsPassed = 0;
@@ -298,7 +311,7 @@ public class GameController : MonoBehaviour {
         failureText.enabled = false;
 
     }
-
+    #region Accessors
     public bool GameLost
     {
 
