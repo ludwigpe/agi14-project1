@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour {
             player.GetComponent<ShakeWiiControls>().enabled = false;
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
-        Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
+//        Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
 
     }
     /// <summary>
@@ -143,9 +143,9 @@ public class GameController : MonoBehaviour {
 
             if (gameWon)
             {
-                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
+//                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 victoryText.guiText.enabled = true;
-                player.camera.enabled = false;
+//                player.camera.enabled = false;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
                 MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
@@ -156,8 +156,8 @@ public class GameController : MonoBehaviour {
             }
             else if (gameLost)
             {
-                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
-                player.camera.enabled = false;
+//                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
+//                player.camera.enabled = false;
                 failureText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
