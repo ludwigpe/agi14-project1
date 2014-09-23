@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-<<<<<<< HEAD
 public class GameController : MonoBehaviour {
 
     [DllImport ("UniWii")]
@@ -14,14 +13,7 @@ public class GameController : MonoBehaviour {
     private static extern int wiimote_count();
 
     public bool DEBUGGING;
-=======
-/// <summary>
-/// The GameController component is responsible for maintaining overall
-/// gameplay functionality such as spawning AI and so forth.
-/// </summary>
-public class GameController : MonoBehaviour
-{
->>>>>>> 5f0b5ce... High Score System
+
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
@@ -200,8 +192,6 @@ public class GameController : MonoBehaviour
                     {
                         Application.LoadLevel("start");
                     }
-                    playerName = GUILayout.TextField(playerName, MAX_NAME_LENGTH);
-
                 }
                 else
                 {

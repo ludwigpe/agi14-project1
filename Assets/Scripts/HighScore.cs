@@ -49,7 +49,6 @@ public class HighScore : MonoBehaviour
     void OnGUI()
     {
         Rect highScoreRect = new Rect(Screen.width / 2 - 250, Screen.height / 2 - 225, 500, 450);
-
         // Is the game over?
         if (gameController.GameLost || gameController.GameWon)
         {
