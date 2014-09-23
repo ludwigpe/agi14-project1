@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
 
     // Game time 
     public GUIText timeText;
-    private int secondsPassed;
+    private float inGameTimePassed;
     private const int MAX_TIME = 255; // In seconds, max time that a game session is allowed to take
 
 	// Keeps track of nr of pellets left, when zero => victory
@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
 	private bool gameLost = false;
     private bool gameWon = false;
     private bool gameIsOver = false;
+    private bool gameStarted = false;
 
 	// Score counter
 	public GUIText scoreText;
@@ -51,9 +52,10 @@ public class GameController : MonoBehaviour
 	void Start () 
     {
 		scoreCounter = 0;
-        secondsPassed = 0;
+        inGameTimePassed = 0;
 		UpdateScore ();
         Instantiate_AI();
+        gameStarted = true;
 	}
 
     /// <summary>
@@ -107,7 +109,7 @@ public class GameController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        if (!gameIsOver)
+        if (!gameIsOver && gameStarted)
         {
             UpdateTimeText();
             CheckVictoryConditions();
@@ -155,7 +157,8 @@ public class GameController : MonoBehaviour
     /// </summary>
     private void UpdateTimeText()
     {
-        secondsPassed = (int)Mathf.Floor(Time.timeSinceLevelLoad);
+        inGameTimePassed += Time.deltaTime;
+        int secondsPassed = (int)Mathf.Floor(inGameTimePassed);
         timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
     }
 
@@ -168,7 +171,7 @@ public class GameController : MonoBehaviour
         {
             gameWon = true;
         }
-        else if (secondsPassed >= MAX_TIME)
+        else if (inGameTimePassed >= MAX_TIME)
         {
             gameLost = true;
 
