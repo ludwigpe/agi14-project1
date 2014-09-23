@@ -41,7 +41,6 @@ public class DeathCheck : MonoBehaviour
             {
                 script.enabled = false;
             }
-            other.audio.Stop();
         }
     }
 

@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The GameController component is responsible for maintaining overall 
+/// gameplay functionality such as spawning AI and so forth.
+/// </summary>
 public class GameController : MonoBehaviour 
 {
     // Connection to player object
@@ -43,7 +47,7 @@ public class GameController : MonoBehaviour
     public Material pinky_mat;
     public Material clyde_mat;
 
-	// Use this for initialization
+	/// Use this for initialization
 	void Start () 
     {
 		scoreCounter = 0;
@@ -113,6 +117,12 @@ public class GameController : MonoBehaviour
                 victoryText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
+
+                MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+                foreach (MonoBehaviour script in scriptComponents)
+                {
+                    script.enabled = false;
+                }
             }
             else if (gameLost)
             {
@@ -133,7 +143,7 @@ public class GameController : MonoBehaviour
         if (gameIsOver)
         {
             // Create a restart button
-            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 30, 200, 40), "Restart"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 240, 280, 40), "Restart"))
             {
                 Application.LoadLevel("start");
             }
@@ -161,7 +171,12 @@ public class GameController : MonoBehaviour
         else if (secondsPassed >= MAX_TIME)
         {
             gameLost = true;
-            Destroy(player.gameObject);
+
+            MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scriptComponents)
+            {
+                script.enabled = false;
+            }
         }
     }
 	
@@ -221,6 +236,14 @@ public class GameController : MonoBehaviour
         set
         {
             gameWon = value;
+        }
+    }
+
+    public int Score
+    {
+        get
+        {
+            return scoreCounter;
         }
     }
     #endregion
