@@ -1,9 +1,11 @@
 Credits:
 --------
+Downloaded on September 22nd, 2014
+     S: DeepScan.mp3 by noirenex -- http://www.freesound.org/people/noirenex/sounds/159230/ -- License: Creative Commons 0
 
 Downloaded on September 17th, 2014
-	 S: 8-bit Hurt.aif by timgormly | License: Attribution | (Modification: pitched down)
-	 S: MiniJump.wav by coby12388 | License: Attribution
+     S: 8-bit Hurt.aif by timgormly -- http://www.freesound.org/people/timgormly/sounds/170149/ -- License: Attribution
+     S: MiniJump.wav by coby12388 -- http://www.freesound.org/people/coby12388/sounds/222571/ -- License: Attribution
      S: Square Fanfare.wav by connersaw8 -- http://www.freesound.org/people/connersaw8/sounds/125689/ -- License: Creative Commons 0
      S: pacmanfromhell.wav by NoiseCollector -- http://www.freesound.org/people/NoiseCollector/sounds/62767/ -- License: Attribution
      S: Life Lost Game Over by noirenex -- http://www.freesound.org/people/noirenex/sounds/159408/ -- License: Creative Commons 0

@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The GameController component is responsible for maintaining overall 
+/// gameplay functionality such as spawning AI and so forth.
+/// </summary>
 public class GameController : MonoBehaviour 
 {
     // Connection to player object
@@ -29,13 +33,76 @@ public class GameController : MonoBehaviour
     public AudioClip sound_victory;
     public AudioClip sound_lost;
 
-	// Use this for initialization
+    // Prefabs
+    public Transform ghost_prefab; // Prefab for ai ghosts
+
+    // AI Spawn Points (to disable a certain AI simple skip giving it a spawn pos)
+    public Transform spawn_pos_blinky;
+    public Transform spawn_pos_inky;
+    public Transform spawn_pos_pinky;
+    public Transform spawn_pos_clyde;
+
+    // AI Materials
+    public Material inky_mat;
+    public Material pinky_mat;
+    public Material clyde_mat;
+
+	/// Use this for initialization
 	void Start () 
     {
 		scoreCounter = 0;
         secondsPassed = 0;
 		UpdateScore ();
+        Instantiate_AI();
 	}
+
+    /// <summary>
+    /// Creates and setups the four AI ghosts.
+    /// </summary>
+    void Instantiate_AI()
+    {
+        Transform ai_ghost;
+        FollowTargetScript follow_target_script;
+        Renderer mesh_renderer;
+
+        // Blinky
+        if (spawn_pos_blinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_blinky.position, spawn_pos_blinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+        }
+
+        // Pinky
+        if (spawn_pos_pinky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_pinky.position, spawn_pos_pinky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = pinky_mat;
+        }
+
+        // Inky
+        if (spawn_pos_inky)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_inky.position, spawn_pos_inky.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = inky_mat;
+        }
+
+        // Clyde
+        if (spawn_pos_clyde)
+        {
+            ai_ghost = (Transform)Instantiate(ghost_prefab, spawn_pos_clyde.position, spawn_pos_clyde.rotation);
+            follow_target_script = ai_ghost.GetComponent<FollowTargetScript>();
+            follow_target_script.target = player.transform;
+            mesh_renderer = ai_ghost.GetComponentInChildren<Renderer>();
+            mesh_renderer.material = clyde_mat;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -50,6 +117,12 @@ public class GameController : MonoBehaviour
                 victoryText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
+
+                MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+                foreach (MonoBehaviour script in scriptComponents)
+                {
+                    script.enabled = false;
+                }
             }
             else if (gameLost)
             {
@@ -70,7 +143,7 @@ public class GameController : MonoBehaviour
         if (gameIsOver)
         {
             // Create a restart button
-            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 30, 200, 40), "Restart"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2 + 240, 280, 40), "Restart"))
             {
                 Application.LoadLevel("start");
             }
@@ -98,7 +171,12 @@ public class GameController : MonoBehaviour
         else if (secondsPassed >= MAX_TIME)
         {
             gameLost = true;
-            Destroy(player.gameObject);
+
+            MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scriptComponents)
+            {
+                script.enabled = false;
+            }
         }
     }
 	
@@ -158,6 +236,14 @@ public class GameController : MonoBehaviour
         set
         {
             gameWon = value;
+        }
+    }
+
+    public int Score
+    {
+        get
+        {
+            return scoreCounter;
         }
     }
     #endregion
