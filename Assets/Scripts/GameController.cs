@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour {
     private static extern int wiimote_count();
 
     public bool DEBUGGING;
-
+    public Rect restartButton;
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
@@ -145,6 +145,7 @@ public class GameController : MonoBehaviour {
             {
                 Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
                 victoryText.guiText.enabled = true;
+                player.camera.enabled = false;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
                 MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
@@ -156,6 +157,7 @@ public class GameController : MonoBehaviour {
             else if (gameLost)
             {
                 Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
+                player.camera.enabled = false;
                 failureText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
@@ -174,7 +176,7 @@ public class GameController : MonoBehaviour {
 
         if (gameIsOver)
         {
-            GUILayout.BeginArea(new Rect(Screen.width/2 - 70, Screen.height/2 -100, 140, 200));
+            GUILayout.BeginArea(new Rect(Screen.width/2 - 70, Screen.height/2 -100, 140, Screen.height));
             if (c == 0)
             {
                 GUILayout.Label("Press 1 and 2 on the wii controller!");
@@ -188,7 +190,7 @@ public class GameController : MonoBehaviour {
             {
                 if(gameLost || gameWon)
                 {
-                    if(GUILayout.Button("Reset game"))
+                    if(GUI.Button(restartButton, "Restart Game"))
                     {
                         Application.LoadLevel("start");
                     }
