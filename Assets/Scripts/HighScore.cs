@@ -105,6 +105,10 @@ public class HighScore : MonoBehaviour
                 posX += width;
             }
             GUI.EndGroup();
+//            if(GUI.Button(new Rect(Screen.width/2 -140, Screen.height/2 + 240, 280, 40), "Restart Game"))
+//            {
+//                Application.LoadLevel("start");
+//            }
         }
     }
 
