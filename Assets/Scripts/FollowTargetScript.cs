@@ -45,7 +45,11 @@ public class FollowTargetScript : MonoBehaviour {
             return;
 
 		if (Vector3.Distance(transform.position, target.position) <= persistentChaseDistance)
-			UpdateDestination();
+        {
+            UpdateDestination();
+        }
+
+			
 	}
 
 	// Update this objects target destination.

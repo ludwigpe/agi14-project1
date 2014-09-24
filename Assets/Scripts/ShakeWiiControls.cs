@@ -40,7 +40,7 @@ public class ShakeWiiControls : MonoBehaviour {
     [DllImport ("UniWii")]
     private static extern double wiimote_getBatteryLevel( int which );
 
-    private bool DEBUGGING = true;
+    private bool DEBUGGING = false;
 
     public GameController gc;
     public int flickThreshold = 25;

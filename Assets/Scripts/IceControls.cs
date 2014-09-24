@@ -21,11 +21,6 @@ public class IceControls : MonoBehaviour
         soundEffectManager = GetComponent<PlaySoundEffect>();
         charController = GetComponent<CharacterController>();
 	}
-	void OnGUI()
-	{
-		float velocity = moveDirection.magnitude;
-		GUILayout.Label("velocity: " + velocity);
-	}
 	// Update is called once per frame
 	void Update () 
     {

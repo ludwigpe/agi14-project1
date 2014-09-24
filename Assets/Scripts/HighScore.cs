@@ -32,6 +32,7 @@ public class HighScore : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         if (gameControllerObject != null)
         {
