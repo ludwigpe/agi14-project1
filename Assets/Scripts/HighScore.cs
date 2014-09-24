@@ -132,7 +132,14 @@ public class HighScore : MonoBehaviour
             {
                 if (name.Length != 0)
                 {
-                    name = name.Substring(0, name.Length - 1);
+                    if (firstCharacterEnter)
+                    {
+                        name = "";
+                    }
+                    else
+                    {
+                        name = name.Substring(0, name.Length - 1);
+                    }
                 }
             }
             else
