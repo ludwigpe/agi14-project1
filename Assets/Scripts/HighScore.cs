@@ -135,6 +135,7 @@ public class HighScore : MonoBehaviour
                     if (firstCharacterEnter)
                     {
                         name = "";
+                        firstCharacterEnter = false;
                     }
                     else
                     {
