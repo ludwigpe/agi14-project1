@@ -43,74 +43,6 @@ public class HighScore : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Updates the GUI.
-    /// </summary>
-    void OnGUI()
-    {
-        Rect highScoreRect = new Rect(Screen.width / 2 - 250, Screen.height / 2 - 225, 500, 450);
-        // Is the game over?
-        if (gameController.GameLost || gameController.GameWon)
-        {
-            // Did we make the high score?
-            if (checkScore)
-            {
-                int newScore = gameController.Score;
-                takenEntryIndex = GetScoreEntryIndex(newScore);
-                if (takenEntryIndex != -1)
-                {
-                    inputName = true;
-                    checkScore = false;
-                }
-            }
-
-            float entryHeight = 35;
-
-            GUI.BeginGroup(highScoreRect);
-            GUI.Box(new Rect(0, 0, highScoreRect.width, highScoreRect.height), "High Score", scoreTableStyle);
-
-            for (int i = 0; i < 10; i++)
-            {
-                int posX = 0;
-                int width = 0;
-
-                // Mark selected entry with color
-                if (inputName && i == takenEntryIndex)
-                {
-                    flashColorScale += Time.deltaTime * flashColorSign;
-                    if (flashColorScale >= 1 || flashColorScale <= 0)
-                    {
-                        flashColorSign *= -1;
-                    }
-                    GUI.contentColor = Color.Lerp(flashTextColor1, flashTextColor2, flashColorScale);
-                }
-                else
-                {
-                    GUI.contentColor = defaultTextColor;
-                }
-
-                string entryName = PlayerPrefs.GetString(i + "HScoreName");
-                int entryScore = PlayerPrefs.GetInt(i + "HScore");
-
-                width = 10;
-                GUI.Label(new Rect(posX, i * entryHeight, width, entryHeight), (i + 1) + ":", scoreIndexStyle);
-                posX += width;
-
-                width = 200;
-                GUI.Label(new Rect(posX, i * entryHeight, width, entryHeight), entryName, scoreEntryStyle);
-                posX += width;
-
-                width = 300;
-                GUI.Label(new Rect(posX, i * entryHeight, width, entryHeight), "" + entryScore, scorePointStyle);
-                posX += width;
-            }
-            GUI.EndGroup();
-//            if(GUI.Button(new Rect(Screen.width/2 -140, Screen.height/2 + 240, 280, 40), "Restart Game"))
-//            {
-//                Application.LoadLevel("start");
-//            }
-        }
-    }
 
     // Update is called once per frame
     void Update()
@@ -203,5 +135,61 @@ public class HighScore : MonoBehaviour
             }
         }
         return entryIndex;
+    }
+
+   public void RenderHighScoreList(Rect container)
+    {
+        float width = Mathf.Min(500, container.width);
+        float height = Mathf.Min(450, container.height);
+        float left = ((container.width - width) / 2) + container.x;
+        float top = (container.height - height) / 2;
+        Rect highScoreRect = new Rect(left, top, width, height);
+        // Did we make the high score?
+        if (checkScore)
+        {
+            int newScore = gameController.Score;
+            takenEntryIndex = GetScoreEntryIndex(newScore);
+            if (takenEntryIndex != -1)
+            {
+                inputName = true;
+                checkScore = false;
+            }
+        }
+        
+        float entryHeight = 35;
+        GUILayout.BeginArea(highScoreRect, "High Score", scoreTableStyle);
+        for (int i = 0; i < 10; i++)
+        {
+            int posX = 0;
+             width = 0;
+            
+            // Mark selected entry with color
+            if (inputName && i == takenEntryIndex)
+            {
+                flashColorScale += Time.deltaTime * flashColorSign;
+                if (flashColorScale >= 1 || flashColorScale <= 0)
+                {
+                    flashColorSign *= -1;
+                }
+                GUI.contentColor = Color.Lerp(flashTextColor1, flashTextColor2, flashColorScale);
+            }
+            else
+            {
+                GUI.contentColor = defaultTextColor;
+            }
+            
+            string entryName = PlayerPrefs.GetString(i + "HScoreName");
+            int entryScore = PlayerPrefs.GetInt(i + "HScore");
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label( (i+1)+ ": ", scoreIndexStyle, GUILayout.Width(10.0F), GUILayout.Height(entryHeight));
+            GUILayout.Label( entryName, scoreEntryStyle, GUILayout.Width(highScoreRect.width*0.6F), GUILayout.Height(entryHeight));
+            GUILayout.Label( entryScore.ToString(), scorePointStyle, GUILayout.Height(entryHeight));
+           
+            GUILayout.EndHorizontal();
+
+        }
+        GUILayout.EndArea();
     }
 }

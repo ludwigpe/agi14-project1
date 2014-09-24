@@ -5,36 +5,37 @@ using System.Runtime.InteropServices;
 
 public class GameController : MonoBehaviour {
 
-    [DllImport ("UniWii")]
-    private static extern void wiimote_start();
-    [DllImport ("UniWii")]
-    private static extern void wiimote_stop();
-    [DllImport ("UniWii")]
-    private static extern int wiimote_count();
-
+//    [DllImport ("UniWii")]
+//    private static extern void wiimote_start();
+//    [DllImport ("UniWii")]
+//    private static extern void wiimote_stop();
+//    [DllImport ("UniWii")]
+//    private static extern int wiimote_count();
+//
     public bool DEBUGGING;
     public Rect restartButton;
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
     public Transform spawnPoint;
-//    private bool playerCreated = false;
+
 
 
     // Game time
     public GUIText timeText;
     private int secondsPassed;
-    private const int MAX_TIME = 60; // In seconds, max time that a game session is allowed to take
+    private const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
 
 	// Keeps track of nr of pellets left, when zero => victory
 	private int nrPelletsLeft;
 
 	// Text displayed at completion of game
-	public GUIText victoryText;
-    public GUIText failureText;
+//	public GUIText victoryText;
+//    public GUIText failureText;
 	private bool gameLost = false;
     private bool gameWon = false;
     private bool gameIsOver = true;
+    private bool playersConnected = false;
     private string playerName = "";
     private const int MAX_NAME_LENGTH = 3;
 
@@ -65,8 +66,8 @@ public class GameController : MonoBehaviour {
     {
         ResetGame();
 		UpdateScore ();
-        if(!DEBUGGING)
-            wiimote_start();
+//        if(!DEBUGGING)
+//            wiimote_start();
 
 	}
 
@@ -144,7 +145,7 @@ public class GameController : MonoBehaviour {
             if (gameWon)
             {
 //                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
-                victoryText.guiText.enabled = true;
+//                victoryText.guiText.enabled = true;
 //                player.camera.enabled = false;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
@@ -158,7 +159,7 @@ public class GameController : MonoBehaviour {
             {
 //                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
 //                player.camera.enabled = false;
-                failureText.guiText.enabled = true;
+//                failureText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
@@ -170,8 +171,8 @@ public class GameController : MonoBehaviour {
     void OnGUI()
     {
         int c = 2;
-        if(!DEBUGGING)
-            c = wiimote_count();
+//        if(!DEBUGGING)
+//            c = wiimote_count();
 
 
         if (gameIsOver)
@@ -195,7 +196,7 @@ public class GameController : MonoBehaviour {
                         Application.LoadLevel("start");
                     }
                 }
-                else
+                else if(playersConnected)
                 {
                     if(GUILayout.Button("Start Game"))
                     {
@@ -204,8 +205,8 @@ public class GameController : MonoBehaviour {
                         gameIsOver = false;
                     }
                 }
-
             }
+
             GUILayout.EndArea();
         }
 
@@ -299,25 +300,17 @@ public class GameController : MonoBehaviour {
     /// Raises the application quit event.
     /// Close all connections to wiimotes
     /// </summary>
-    void OnApplicationQuit()
-    {
-        if(!DEBUGGING)
-            wiimote_stop();
-    }
-
     void ResetGame()
     {
         gameIsOver = true;
         gameWon = false;
         gameLost = false;
-//        playerCreated = false;
 
         scoreCounter = 0;
         secondsPassed = 0;
-        victoryText.enabled = false;
-        failureText.enabled = false;
 
     }
+
     #region Accessors
     public bool GameLost
     {
@@ -349,6 +342,39 @@ public class GameController : MonoBehaviour {
         get
         {
             return scoreCounter;
+        }
+    }
+
+    public int SecondsLeft
+    {
+        get
+        {
+            return MAX_TIME - secondsPassed;
+        }
+    }
+
+    public bool GameIsOver
+    {
+        get
+        {
+            return gameIsOver;
+        }
+        set
+        {
+            gameIsOver = value;
+        }
+    }
+
+    public bool PlayersConnected
+    {
+
+        get
+        {
+            return playersConnected;
+        }
+        set
+        {
+            playersConnected = value;   
         }
     }
     #endregion
