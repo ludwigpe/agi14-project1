@@ -27,7 +27,6 @@ public class BatteryIndicator : MonoBehaviour {
         //c = 2;
         for (int i = 0; i < c; i++)
         {
-            float offset = i%2;
             double b = wiimote_getBatteryLevel(i);
 
             Debug.Log("b: " + b);

@@ -72,7 +72,6 @@ public class FloorScript : MonoBehaviour {
             numPellets++;
             
         }
-        Debug.Log("Num pellets: " + numPellets);
         return numPellets;
     }
 

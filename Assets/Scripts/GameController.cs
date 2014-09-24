@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour {
     private bool gameWon = false;
     private bool gameIsOver = true;
     private bool playersConnected = false;
-    private string playerName = "";
+
     private const int MAX_NAME_LENGTH = 3;
 
 	// Score counter

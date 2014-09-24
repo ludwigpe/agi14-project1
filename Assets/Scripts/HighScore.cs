@@ -160,8 +160,6 @@ public class HighScore : MonoBehaviour
         GUILayout.BeginArea(highScoreRect, "High Score", scoreTableStyle);
         for (int i = 0; i < 10; i++)
         {
-            int posX = 0;
-             width = 0;
             
             // Mark selected entry with color
             if (inputName && i == takenEntryIndex)
