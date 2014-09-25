@@ -26,6 +26,7 @@ public class HighScore : MonoBehaviour
     // High Score logic
     private bool checkScore = true;
     private bool inputName = false;
+    private bool firstCharacterEnter = true; // Is the character entered the first character to be entered?
     private int takenEntryIndex;
     private int maxScoreNameLength = 20;    // Max characters that score name entry can consist of
 
@@ -131,7 +132,15 @@ public class HighScore : MonoBehaviour
             {
                 if (name.Length != 0)
                 {
-                    name = name.Substring(0, name.Length - 1);
+                    if (firstCharacterEnter)
+                    {
+                        name = "";
+                        firstCharacterEnter = false;
+                    }
+                    else
+                    {
+                        name = name.Substring(0, name.Length - 1);
+                    }
                 }
             }
             else
@@ -143,7 +152,15 @@ public class HighScore : MonoBehaviour
                 }
                 else if (name.Length + 1 <= maxScoreNameLength)
                 {
-                    name += c;
+                    if (firstCharacterEnter)
+                    {
+                        name = c.ToString();
+                        firstCharacterEnter = false;
+                    }
+                    else
+                    {
+                        name += c;
+                    }
                 }
             }
         }
