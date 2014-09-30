@@ -20,10 +20,14 @@ public class IceControls : MonoBehaviour
 
     // Sounds
     public AudioClip sound_jump;
+
+    // Animation
+    private AnimationManager animationManager;
 	
     // Use this for initialization
 	void Start () 
     {
+        animationManager = GetComponent<AnimationManager>();
 	}
 	
 	// Update is called once per frame
@@ -48,6 +52,7 @@ public class IceControls : MonoBehaviour
                 // player pressed up-key so applie some force to the movement
                 Vector3 force = transform.forward * speed * Time.deltaTime;
                 moveDirection += force;
+                animationManager.PlayMoveAnimation();
                 
                 if (!audio_source_move.isPlaying)
                 {

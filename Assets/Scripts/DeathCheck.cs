@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// DeathCheck is responsible for checking whether
+/// the unit should die or not. 
+/// </summary>
 public class DeathCheck : MonoBehaviour
 {
 	// Death
@@ -9,6 +13,9 @@ public class DeathCheck : MonoBehaviour
 
     // Link with GameController
     private GameController gameController;
+    private AnimationManager animationManager;
+
+    private bool isDead = false;
 
     /// <summary>
     ///  Use this for initialization
@@ -16,6 +23,7 @@ public class DeathCheck : MonoBehaviour
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+       
         if (gameControllerObject != null)
         {
             gameController = gameControllerObject.GetComponent<GameController>();
@@ -24,6 +32,8 @@ public class DeathCheck : MonoBehaviour
         {
             Debug.Log("Cannot find 'GameController' script");
         }
+
+        animationManager = GetComponent<AnimationManager>();
     }
 
     /// <summary>
@@ -32,9 +42,10 @@ public class DeathCheck : MonoBehaviour
     /// <param name="collider">Collider object.</param>
     void OnControllerColliderHit(ControllerColliderHit collider)
     {
-        if (collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
+        if (!isDead && collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
         {
-            Kill();
+            animationManager.PlayDeathAnimation();
+            isDead = true;
         }
     }
 
@@ -44,6 +55,7 @@ public class DeathCheck : MonoBehaviour
     public void Kill()
     {
         bool gameRunning = !gameController.GameLost && !gameController.GameWon;
+       
         if (gameRunning) 
         {
             gameController.GameLost = true;

@@ -133,8 +133,6 @@ public class GameController : MonoBehaviour
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
         }
-        else{
-        }
 	}
 
     /// <summary>
