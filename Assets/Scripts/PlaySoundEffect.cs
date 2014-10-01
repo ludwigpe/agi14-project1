@@ -11,6 +11,7 @@ public class PlaySoundEffect : MonoBehaviour
     private AudioSource audio_source_brake;
     private AudioSource audio_source_move;
     private AudioSource audio_source_jump;
+    private AudioSource audio_source_life_lost;
 
     private bool brakeSoundStarted = false;
     private int framesWithoutBrakeSound = 0;
@@ -23,13 +24,14 @@ public class PlaySoundEffect : MonoBehaviour
     void Start()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
-        if (audioSources.Length < 3)
+        if (audioSources.Length < 4)
         {
             Debug.Log("Could not find all AudioSources.");
         }
         audio_source_brake = audioSources[0];
         audio_source_move = audioSources[1];
         audio_source_jump = audioSources[2];
+        audio_source_life_lost = audioSources[3];
     }
 
     /// <summary>
@@ -88,6 +90,21 @@ public class PlaySoundEffect : MonoBehaviour
         }
         framesWithoutBrakeSound = 0;
         brakeSoundHitThisFrame = true;
+        return result;
+    }
+
+    /// <summary>
+    /// Tries to play the life lost sound effect.
+    /// </summary>
+    /// <returns>True if successful.</returns>
+    public bool playLifeLostSound()
+    {
+        bool result = false;
+        if (!audio_source_life_lost.isPlaying)
+        {
+            audio_source_life_lost.Play();
+            result = true;
+        }
         return result;
     }
 }

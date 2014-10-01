@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Component that makes an object follow another object.
+/// <summary>
+/// Component that makes an object follow another object.
+/// </summary>
+ 
 public class FollowTargetScript : MonoBehaviour
 {
     public Transform target;
@@ -12,6 +15,9 @@ public class FollowTargetScript : MonoBehaviour
     // GameController link
     private GameController gameController;
 
+    /// <summary>
+    /// Initialize Ghost.
+    /// </summary>
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -31,10 +37,11 @@ public class FollowTargetScript : MonoBehaviour
         InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
-
         // Stop idle sound when game is over
         if (gameController.GameLost || gameController.GameWon)
         {
@@ -52,14 +59,31 @@ public class FollowTargetScript : MonoBehaviour
     /// <param name="collision">Collision object.</param>
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
+        GameObject collidee = collision.gameObject;
+
+        if (collidee.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
         {
-            DeathCheck deathCheck = collision.gameObject.GetComponent<DeathCheck>();
-            deathCheck.Kill();
+            DeathCheck deathCheck = collidee.GetComponent<DeathCheck>();
+            if (!deathCheck.IsDead)
+            {
+                CharacterController charController = collidee.GetComponent<CharacterController>();
+                charController.enabled = false;
+                gameController.ControlsDisabled = true;
+
+                AnimationManager animationManager = collidee.GetComponent<AnimationManager>();
+                animationManager.PlayDeathAnimation();
+
+                PlaySoundEffect soundEffectManager = collidee.GetComponent<PlaySoundEffect>();
+                soundEffectManager.playLifeLostSound();
+
+                deathCheck.IsDead = true;
+            }
         }
     }
 
-    // Update this objects target destination.
+    /// <summary>
+    /// Update this objects target destination.
+    /// </summary>
     void UpdateDestination()
     {
         agent.SetDestination(target.position);

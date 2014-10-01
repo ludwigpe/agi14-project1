@@ -14,6 +14,7 @@ public class DeathCheck : MonoBehaviour
     // Link with GameController
     private GameController gameController;
     private AnimationManager animationManager;
+    private PlaySoundEffect soundEffectManager;
 
     private bool isDead = false;
 
@@ -34,6 +35,7 @@ public class DeathCheck : MonoBehaviour
         }
 
         animationManager = GetComponent<AnimationManager>();
+        soundEffectManager = GetComponent<PlaySoundEffect>();
     }
 
     /// <summary>
@@ -44,6 +46,11 @@ public class DeathCheck : MonoBehaviour
     {
         if (!isDead && collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
         {
+            CharacterController charController = GetComponent<CharacterController>();
+            charController.enabled = false;
+            gameController.ControlsDisabled = true;
+
+            soundEffectManager.playLifeLostSound();
             animationManager.PlayDeathAnimation();
             isDead = true;
         }
@@ -79,5 +86,17 @@ public class DeathCheck : MonoBehaviour
 		if (transform.position.y < -DESTROY_HEIGHT) {
 			Destroy(this.gameObject);
 		}
+    }
+
+    public bool IsDead
+    {
+        get
+        {
+            return isDead;
+        }
+        set
+        {
+            isDead = value;
+        }
     }
 }

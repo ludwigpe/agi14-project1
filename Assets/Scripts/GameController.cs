@@ -21,10 +21,13 @@ public class GameController : MonoBehaviour
 	// Text displayed at completion of game
 	public GUIText victoryText;
     public GUIText failureText;
+
+    // Booleans
 	private bool gameLost = false;
     private bool gameWon = false;
     private bool gameIsOver = false;
     private bool gameStarted = false;
+    private bool controlsDisabled = false;
 
 	// Score counter
 	public GUIText scoreText;
@@ -245,6 +248,18 @@ public class GameController : MonoBehaviour
         get
         {
             return scoreCounter;
+        }
+    }
+
+    public bool ControlsDisabled
+    {
+        get
+        {
+            return controlsDisabled;
+        }
+        set
+        {
+            controlsDisabled = value;
         }
     }
     #endregion
