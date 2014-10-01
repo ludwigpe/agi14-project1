@@ -14,10 +14,12 @@ public class IceControls : MonoBehaviour
     // Link to components
     private PlaySoundEffect soundEffectManager;
     private CharacterController charController;
+	private AnimationManager animationManager;
 
     // Use this for initialization
 	void Start () 
     {
+		animationManager = GetComponent<AnimationManager>();
         soundEffectManager = GetComponent<PlaySoundEffect>();
         charController = GetComponent<CharacterController>();
 	}
@@ -35,6 +37,7 @@ public class IceControls : MonoBehaviour
                 // player pressed up-key so applie some force to the movement
                 Vector3 force = transform.forward * speed * Time.deltaTime;
                 moveDirection += force;
+				animationManager.PlayMoveAnimation();
                 soundEffectManager.playMoveSound();
             }
             if (Input.GetKey(KeyCode.DownArrow)) 
