@@ -50,7 +50,7 @@ public class DeathCheck : MonoBehaviour
             charController.enabled = false;
             gameController.ControlsDisabled = true;
 
-            soundEffectManager.playLifeLostSound();
+            soundEffectManager.PlayLifeLostSound();
             animationManager.PlayDeathAnimation();
             isDead = true;
         }

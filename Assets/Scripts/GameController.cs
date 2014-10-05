@@ -31,7 +31,9 @@ public class GameController : MonoBehaviour
 
 	// Score counter
 	public GUIText scoreText;
+    public GUIText ppsText;         // Pellets per seconds text
 	private int scoreCounter;
+    private float pelletsPerSecond;
 
     // Sound clips
     public AudioClip sound_victory;
@@ -55,6 +57,7 @@ public class GameController : MonoBehaviour
 	void Start () 
     {
 		scoreCounter = 0;
+        pelletsPerSecond = 0f;
         inGameTimePassed = 0;
 		UpdateScore ();
         Instantiate_AI();
@@ -115,6 +118,7 @@ public class GameController : MonoBehaviour
         if (!gameIsOver && gameStarted)
         {
             UpdateTimeText();
+            UpdatePelletPerSecond(Time.deltaTime);
             CheckVictoryConditions();
 
             if (gameWon)
@@ -161,6 +165,7 @@ public class GameController : MonoBehaviour
         inGameTimePassed += Time.deltaTime;
         int secondsPassed = (int)Mathf.Floor(inGameTimePassed);
         timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
+        ppsText.text = "Pellets/Second: " + pelletsPerSecond;
     }
 
     /// <summary>
@@ -209,6 +214,25 @@ public class GameController : MonoBehaviour
     {
 		nrPelletsLeft--;
 	}
+
+    /// <summary>
+    /// Increases the pellet per second counter.
+    /// </summary>
+    /// <returns>Current pellet per second.</returns>
+    public float IncreasePelletPerSecond()
+    {
+        pelletsPerSecond++;
+        return pelletsPerSecond;
+    }
+
+    /// <summary>
+    /// Decreases the pellet per second counter based on time passed.
+    /// </summary>
+    /// <param name="time">Amount of seconds passed and thereby how much to decrease the pellet per second counter.</param>
+    private void UpdatePelletPerSecond(float time)
+    {
+        pelletsPerSecond = Mathf.Max( pelletsPerSecond-time, 0 );
+    }
 
 	/// <summary>
 	/// Updates the score.

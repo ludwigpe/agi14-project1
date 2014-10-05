@@ -59,18 +59,18 @@ public class IceControls : MonoBehaviour
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
 				    animationManager.PlayMoveAnimation();
-                    soundEffectManager.playMoveSound();
+                    soundEffectManager.PlayMoveSound();
                 }
                 if (Input.GetKey(KeyCode.DownArrow)) 
                 {
                     Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                     moveDirection += breakForce;
-                    soundEffectManager.playBrakeSound(charController.velocity.magnitude);
+                    soundEffectManager.PlayBrakeSound(charController.velocity.magnitude);
                 }
                 if (Input.GetButton("Jump"))
                 {
                     moveDirection.y = jumpSpeed;
-                    soundEffectManager.playJumpSound();
+                    soundEffectManager.PlayJumpSound();
                 }
             
                 float fric = Mathf.Clamp(100 - friction, 0, 100);

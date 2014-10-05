@@ -37,7 +37,11 @@ public class Pellet_Collision : MonoBehaviour
         {
 			gameController.AddScore(scoreValue);
 			gameController.DecrementPelletCounter();
-            AudioSource.PlayClipAtPoint(sound_consume_pellet, transform.position);
+            float pps = gameController.IncreasePelletPerSecond();
+
+            PlaySoundEffect playSoundEffect = other.gameObject.GetComponent<PlaySoundEffect>();
+            playSoundEffect.PlayEatPellet(pps);
+
 			Destroy (this.gameObject);
 		}
 	}
