@@ -74,7 +74,7 @@ public class FollowTargetScript : MonoBehaviour
                 animationManager.PlayDeathAnimation();
 
                 PlaySoundEffect soundEffectManager = collidee.GetComponent<PlaySoundEffect>();
-                soundEffectManager.playLifeLostSound();
+                soundEffectManager.PlayLifeLostSound();
 
                 deathCheck.IsDead = true;
             }

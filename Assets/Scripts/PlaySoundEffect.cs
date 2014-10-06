@@ -13,14 +13,25 @@ public class PlaySoundEffect : MonoBehaviour
     private AudioSource audio_source_jump;
     private AudioSource audio_source_life_lost;
 
+    // Audio clips
+    public AudioClip audio_clip_eat_pellet;
+
+    // Brake 
     private bool brakeSoundStarted = false;
     private int framesWithoutBrakeSound = 0;
     private bool brakeSoundHitThisFrame = false;
-
     private const int MAX_FRAMES_WO_BRAKE = 1;  // After this amount of frames without brake sfx => stop it
     private const float MIN_VEL_MAG = 0.1f;     // Minimum velocity magnitude to play brake sound effect
 
-    // Use this for initialization
+    // Pellet Pickup Sound Pitch 
+    private const float PITCH_FACTOR = 0.3F;
+    private const float PITCH_CONSTANT = 1 - PITCH_FACTOR;
+    private const float MIN_PITCH = 1F;
+    private const float MAX_PITCH = 3F;
+
+    /// <summary>
+    /// Use this for initialization.
+    /// </summary>
     void Start()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -35,7 +46,7 @@ public class PlaySoundEffect : MonoBehaviour
     }
 
     /// <summary>
-    ///  Update is called once per frame.
+    /// Update is called once per frame.
     /// </summary>
     void Update()
     {
@@ -54,7 +65,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// <summary>
     /// Plays the jump sound effect.
     /// </summary>
-    public void playJumpSound()
+    public void PlayJumpSound()
     {
         audio_source_jump.Play();
     }
@@ -63,7 +74,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// Tries to play the move sound effect.
     /// </summary>
     /// <returns>True if successful.</returns>
-    public bool playMoveSound()
+    public bool PlayMoveSound()
     {
         bool result = false;
         if (!audio_source_move.isPlaying)
@@ -79,7 +90,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// </summary>
     /// <param name="velMag">Magnitude of current velocity.</param>
     /// <returns>True if successful.</returns>
-    public bool playBrakeSound(float velMag)
+    public bool PlayBrakeSound(float velMag)
     {
         bool result = false;
         if (!audio_source_brake.isPlaying && !brakeSoundStarted && velMag > MIN_VEL_MAG)
@@ -97,7 +108,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// Tries to play the life lost sound effect.
     /// </summary>
     /// <returns>True if successful.</returns>
-    public bool playLifeLostSound()
+    public bool PlayLifeLostSound()
     {
         bool result = false;
         if (!audio_source_life_lost.isPlaying)
@@ -106,5 +117,26 @@ public class PlaySoundEffect : MonoBehaviour
             result = true;
         }
         return result;
+    }
+
+    /// <summary>
+    /// Plays the eat pellet sound effect.
+    /// </summary>
+    /// <param name="currentCombo">Current combo value.</param>
+    /// <returns>True if successful.</returns>
+    public void PlayEatPellet(float currentCombo)
+    {
+        float pitch = currentCombo * PITCH_FACTOR + PITCH_CONSTANT;
+        pitch = Mathf.Clamp(pitch, MIN_PITCH, MAX_PITCH);
+            
+        // Use temp AudioSource to allow for multiple simultaneously playing sfx
+        GameObject tempGO = new GameObject("TempAudio");            
+        tempGO.transform.position = this.transform.position;        
+        AudioSource aSource = tempGO.AddComponent<AudioSource>();   
+        aSource.clip = audio_clip_eat_pellet; 
+        aSource.pitch = pitch;
+            
+        aSource.Play();
+        Destroy(tempGO, audio_clip_eat_pellet.length); 
     }
 }

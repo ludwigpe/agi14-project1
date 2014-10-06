@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Handles what happens when something collides with a pellet.
+/// </summary>
 public class Pellet_Collision : MonoBehaviour 
 {
 	// How many points one pellet is worth
@@ -12,7 +15,9 @@ public class Pellet_Collision : MonoBehaviour
     // Sounds
     public AudioClip sound_consume_pellet;
 
-	// Use this for initialization
+	/// <summary>
+    /// Use this for initialization.
+	/// </summary>
 	void Start () 
     {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
@@ -37,13 +42,12 @@ public class Pellet_Collision : MonoBehaviour
         {
 			gameController.AddScore(scoreValue);
 			gameController.DecrementPelletCounter();
-            AudioSource.PlayClipAtPoint(sound_consume_pellet, transform.position);
+            
+            float comboValue = gameController.IncreaseComboCounter();
+            PlaySoundEffect playSoundEffect = other.gameObject.GetComponent<PlaySoundEffect>();
+            playSoundEffect.PlayEatPellet(comboValue);
+
 			Destroy (this.gameObject);
 		}
-	}
-
-	// Update is called once per frame
-	void Update () 
-    {
 	}
 }
