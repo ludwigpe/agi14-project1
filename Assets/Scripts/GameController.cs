@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
 
     // Game time 
     public GUIText timeText;
-    private float inGameTimePassed;
+    private float inGameTimePassed;   // In seconds
     private const int MAX_TIME = 255; // In seconds, max time that a game session is allowed to take
 
 	// Keeps track of nr of pellets left, when zero => victory
@@ -31,9 +31,16 @@ public class GameController : MonoBehaviour
 
 	// Score counter
 	public GUIText scoreText;
-    public GUIText ppsText;         // Pellets per seconds text
 	private int scoreCounter;
-    private float pelletsPerSecond;
+    
+    // Combo counter
+    public GUIText comboText;                   // Shows current achieved pellet combo
+    private float comboCounter;                 // Current combo value
+    private float comboDecayRate = 1F;          // At which rate that the combo should decay
+    private float comboIncrease = 0.75F;        // How much combo should be increased per pellet consumed
+    private Color minComboColor = Color.green;  // Color of lowest combo
+    private Color maxComboColor = Color.red;    // Color of highest combo
+    private float useMaxComboColorValue = 5F;   // Value at which the maxComboColor is used
 
     // Sound clips
     public AudioClip sound_victory;
@@ -57,9 +64,9 @@ public class GameController : MonoBehaviour
 	void Start () 
     {
 		scoreCounter = 0;
-        pelletsPerSecond = 0f;
+        comboCounter = 1f;
         inGameTimePassed = 0;
-		UpdateScore ();
+		UpdateScoreText();
         Instantiate_AI();
         gameStarted = true;
 	}
@@ -112,13 +119,16 @@ public class GameController : MonoBehaviour
         }
     }
 	
-	// Update is called once per frame
+	/// <summary>
+    /// Update is called once per frame.
+	/// </summary>
 	void Update () 
     {
         if (!gameIsOver && gameStarted)
         {
             UpdateTimeText();
-            UpdatePelletPerSecond(Time.deltaTime);
+            UpdateComboText();
+            UpdateComboCounter(Time.deltaTime);
             CheckVictoryConditions();
 
             if (gameWon)
@@ -158,14 +168,31 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the time text to time passed since beginning of the game in seconds.
+    /// Updates the time text to the time passed since beginning of the game (in seconds).
     /// </summary>
-    private void UpdateTimeText()
+    void UpdateTimeText()
     {
         inGameTimePassed += Time.deltaTime;
-        int secondsPassed = (int)Mathf.Floor(inGameTimePassed);
+        int secondsPassed = Mathf.FloorToInt(inGameTimePassed);
         timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
-        ppsText.text = "Pellets/Second: " + pelletsPerSecond;
+    }
+
+    /// <summary>
+    /// Updates the text used to display current pellet combo.
+    /// </summary>
+    void UpdateComboText()
+    {
+        float colorScale = Mathf.Clamp(comboCounter / useMaxComboColorValue, 0, 1);
+        comboText.text = "Combo: " + Mathf.FloorToInt(comboCounter) + "X";
+        comboText.color = Color.Lerp(minComboColor, maxComboColor, colorScale);
+    }
+
+    /// <summary>
+    /// Updates the score text.
+    /// </summary>
+    void UpdateScoreText()
+    {
+        scoreText.text = "Score: " + scoreCounter;
     }
 
     /// <summary>
@@ -190,17 +217,19 @@ public class GameController : MonoBehaviour
     }
 	
 	/// <summary>
-	/// Adds points to the score.
+	/// Takes an input amount of points, multiplies it with the current combo multiplier
+    /// and then adds it to the current score.
 	/// </summary>
 	/// <param name="points">Amount of points to add.</param>
 	public void AddScore(int points)
     {
-		scoreCounter += points;
-		UpdateScore ();
+        int scoreMultiplier = Mathf.FloorToInt(Mathf.Max(comboCounter, 1));
+        scoreCounter += points * scoreMultiplier;
+		UpdateScoreText();
 	}
 
 	/// <summary>
-	/// Increments the pellet counter.
+	/// Increments the pellet counter by one.
 	/// </summary>
 	public void IncrementPelletCounter()
     {
@@ -208,7 +237,7 @@ public class GameController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Decrements the pellet counter.
+	/// Decrements the pellet counter by one.
 	/// </summary>
 	public void DecrementPelletCounter()
     {
@@ -216,31 +245,23 @@ public class GameController : MonoBehaviour
 	}
 
     /// <summary>
-    /// Increases the pellet per second counter.
+    /// Increases the value of the combo counter.
     /// </summary>
-    /// <returns>Current pellet per second.</returns>
-    public float IncreasePelletPerSecond()
+    /// <returns>Current value of combo counter.</returns>
+    public float IncreaseComboCounter()
     {
-        pelletsPerSecond++;
-        return pelletsPerSecond;
+        comboCounter += comboIncrease;
+        return comboCounter;
     }
 
     /// <summary>
-    /// Decreases the pellet per second counter based on time passed.
+    /// Decreases the combo counter based on time passed.
     /// </summary>
-    /// <param name="time">Amount of seconds passed and thereby how much to decrease the pellet per second counter.</param>
-    private void UpdatePelletPerSecond(float time)
+    /// <param name="dt">Amount of seconds passed.</param>
+    private void UpdateComboCounter(float dt)
     {
-        pelletsPerSecond = Mathf.Max( pelletsPerSecond-time, 0 );
+        comboCounter = Mathf.Max(comboCounter - dt * comboDecayRate, 1);
     }
-
-	/// <summary>
-	/// Updates the score.
-	/// </summary>
-	void UpdateScore() 
-    {
-		scoreText.text = "Score: " + scoreCounter;
-	}
 
     #region Accessors
     public bool GameLost
