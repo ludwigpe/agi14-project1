@@ -197,9 +197,20 @@ public class ShakeWiiControls : MonoBehaviour {
             }
 
             moveDirection.y -= gravity * Time.deltaTime;
-
             controller.Move(moveDirection * Time.deltaTime);
         }
+    }
 
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        name = hit.gameObject.name;
+        Debug.Log(hit.normal);
+        
+        
+        if(hit.gameObject.name.Equals("Walls"))
+        {
+            float mag = Vector3.Dot(moveDirection, hit.normal);
+            moveDirection -= (mag * hit.normal);
+        }
     }
 }
