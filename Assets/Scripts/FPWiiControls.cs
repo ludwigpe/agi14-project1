@@ -31,12 +31,14 @@ public class FPWiiControls : MonoBehaviour {
     public float gravity = 10.0F;
     private Vector3 moveDirection = Vector3.zero;
     private int wiiControllerIndex;
-    private bool DEBUGGING = false;
+    public bool DEBUGGING = false;
+    private PlaySoundEffect soundEffectManager;
     #endregion
     
     // Use this for initialization
     void Start () {
 //        wiiControllerIndex = gc.GetFirstPersonIndex();
+        soundEffectManager = GetComponent<PlaySoundEffect>();
         wiiControllerIndex = 1;
     }
 
@@ -89,7 +91,12 @@ public class FPWiiControls : MonoBehaviour {
             if (controller.isGrounded) {
                 moveDirection.y = 0;
                 if (wiimote_getButtonA(wiiControllerIndex))
+                {
+                    Debug.Log("YOu Did it");
                     moveDirection.y = jumpSpeed;
+                    soundEffectManager.playJumpSound();
+                }
+                    
             }
             moveDirection.y -= gravity * Time.deltaTime;
             controller.Move(moveDirection * Time.deltaTime);

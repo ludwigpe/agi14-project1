@@ -3,41 +3,31 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// The GameController component is responsible for maintaining overall
+/// gameplay functionality such as spawning AI and so forth.
+/// </summary>
 public class GameController : MonoBehaviour {
 
-//    [DllImport ("UniWii")]
-//    private static extern void wiimote_start();
-//    [DllImport ("UniWii")]
-//    private static extern void wiimote_stop();
-//    [DllImport ("UniWii")]
-//    private static extern int wiimote_count();
-//
     public bool DEBUGGING;
     public Rect restartButton;
+
+
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
     public Transform spawnPoint;
-
-
-
-    // Game time
-    public GUIText timeText;
-    private int secondsPassed;
+//    private int secondsPassed;
     private const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
+    private float inGameTimePassed;
 
 	// Keeps track of nr of pellets left, when zero => victory
 	private int nrPelletsLeft;
-
-	// Text displayed at completion of game
-//	public GUIText victoryText;
-//    public GUIText failureText;
 	private bool gameLost = false;
     private bool gameWon = false;
     private bool gameIsOver = true;
     private bool playersConnected = false;
-
-    private const int MAX_NAME_LENGTH = 3;
+    private bool gameStarted = false;
 
 	// Score counter
 	public GUIText scoreText;
@@ -66,9 +56,6 @@ public class GameController : MonoBehaviour {
     {
         ResetGame();
 		UpdateScore ();
-//        if(!DEBUGGING)
-//            wiimote_start();
-
 	}
 
     void InstatiatePlayer()
@@ -83,7 +70,7 @@ public class GameController : MonoBehaviour {
             player.GetComponent<ShakeWiiControls>().enabled = false;
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
-//        Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
+        Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
 
     }
     /// <summary>
@@ -137,18 +124,21 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (!gameIsOver)
+        if(Input.GetKeyDown(KeyCode.F2))
         {
-            UpdateTimeText();
+            Application.LoadLevel("start");
+        }
+        if (!gameIsOver && gameStarted)
+        {
+
+            inGameTimePassed += Time.deltaTime;
             CheckVictoryConditions();
 
             if (gameWon)
             {
-//                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
-//                victoryText.guiText.enabled = true;
-//                player.camera.enabled = false;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
+
                 MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
                 foreach (MonoBehaviour script in scriptComponents)
                 {
@@ -157,61 +147,28 @@ public class GameController : MonoBehaviour {
             }
             else if (gameLost)
             {
-//                Camera.main.rect = new Rect(0.0F, 0.0F, 1.0F, 1.0F);
-//                player.camera.enabled = false;
-//                failureText.guiText.enabled = true;
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
+
+                // MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
+                // foreach (MonoBehaviour script in scriptComponents)
+                // {
+                //     script.enabled = false;
+                // }
             }
+
         }
-        else{
-        }
-	}
-
-    void OnGUI()
-    {
-        int c = 2;
-//        if(!DEBUGGING)
-//            c = wiimote_count();
-
-
-        if (gameIsOver)
+        if (gameIsOver && !gameStarted)
         {
-            GUILayout.BeginArea(new Rect(Screen.width/2 - 70, Screen.height/2 -100, 140, Screen.height));
-            if (c == 0)
+            if(Input.GetKeyDown(KeyCode.F1))
             {
-                GUILayout.Label("Press 1 and 2 on the wii controller!");
+                InstatiatePlayer();
+                Instantiate_AI();
+                gameIsOver = false;
+                gameStarted = true;
             }
-            else if (c == 1)
-            {
-                GUILayout.Label("Waiting for second player");
-                GUILayout.Label("Press 1 and 2 on the wii controller!");
-            }
-            else
-            {
-                if(gameLost || gameWon)
-                {
-                    if(GUI.Button(restartButton, "Restart Game"))
-                    {
-                        Application.LoadLevel("start");
-                    }
-                }
-                else if(playersConnected)
-                {
-                    if(GUILayout.Button("Start Game"))
-                    {
-                        InstatiatePlayer();
-                        Instantiate_AI();
-                        gameIsOver = false;
-                    }
-                }
-            }
-
-            GUILayout.EndArea();
         }
-
 	}
-
 
     /// <summary>
     /// Updates the time text to time passed since beginning of the game in seconds.
@@ -219,8 +176,7 @@ public class GameController : MonoBehaviour {
 
     private void UpdateTimeText()
     {
-        secondsPassed = (int)Mathf.Floor(Time.timeSinceLevelLoad);
-        timeText.text = "Time left: " + (MAX_TIME - secondsPassed);
+//        inGameTimePassed += Time.deltaTime;
     }
 
     /// <summary>
@@ -232,7 +188,7 @@ public class GameController : MonoBehaviour {
         {
             gameWon = true;
         }
-        else if (secondsPassed >= MAX_TIME)
+        else if (inGameTimePassed >= MAX_TIME)
         {
             gameLost = true;
             MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
@@ -305,9 +261,8 @@ public class GameController : MonoBehaviour {
         gameIsOver = true;
         gameWon = false;
         gameLost = false;
-
-        scoreCounter = 0;
-        secondsPassed = 0;
+        inGameTimePassed = 0;
+        // gameStarted = true;
 
     }
 
@@ -349,7 +304,7 @@ public class GameController : MonoBehaviour {
     {
         get
         {
-            return MAX_TIME - secondsPassed;
+            return MAX_TIME - (int)Mathf.Floor(inGameTimePassed);
         }
     }
 
@@ -374,7 +329,7 @@ public class GameController : MonoBehaviour {
         }
         set
         {
-            playersConnected = value;   
+            playersConnected = value;
         }
     }
     #endregion

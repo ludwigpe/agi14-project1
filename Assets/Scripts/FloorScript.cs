@@ -49,9 +49,9 @@ public class FloorScript : MonoBehaviour {
             {
                 pos = v1 +((v3-v1)/2) + ((v2-v1)/2);
             }
-            pos.x *= transform.localScale.x;
+            pos.x *= transform.parent.localScale.x;
             pos.x += transform.localPosition.x;
-            pos.y *= transform.localScale.y;
+            pos.y *= transform.parent.localScale.y;
             pos.y += transform.localPosition.y;
             pos.z = pos.y;
             pos.y = 1;

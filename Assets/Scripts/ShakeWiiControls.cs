@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -38,9 +38,29 @@ public class ShakeWiiControls : MonoBehaviour {
     [DllImport ("UniWii")]
     private static extern bool wiimote_getButtonDown(int which);
     [DllImport ("UniWii")]
+    private static extern bool wiimote_getButton1(int which);
+    [DllImport ("UniWii")]
+    private static extern bool wiimote_getButton2(int which);
+    [DllImport ("UniWii")]
     private static extern double wiimote_getBatteryLevel( int which );
 
-    private bool DEBUGGING = false;
+    [DllImport ("UniWii")]
+    private static extern bool wiimote_isExpansionPortEnabled( int which );
+    
+    [DllImport ("UniWii")]
+    private static extern byte wiimote_getNunchuckStickX(int which);
+    
+    [DllImport ("UniWii")]
+    private static extern byte wiimote_getNunchuckAccX(int which);
+    [DllImport ("UniWii")]
+    private static extern byte wiimote_getNunchuckAccZ(int which);
+    
+    [DllImport ("UniWii")]
+    private static extern bool wiimote_getButtonNunchuckC(int which);
+    [DllImport ("UniWii")]
+    private static extern bool wiimote_getButtonNunchuckZ(int which);
+
+    public bool DEBUGGING = false;
 
     public GameController gc;
     public int flickThreshold = 25;
@@ -55,11 +75,11 @@ public class ShakeWiiControls : MonoBehaviour {
     private int wiiControllerIndex;
     private Vector3 moveDirection = Vector3.zero;
     private byte centerOffset = 125;
+    private PlaySoundEffect soundEffectManager;
     // Use this for initialization
     void Start () 
     {
-
-//        wiiControllerIndex = gc.GetThirdPersonIndex();
+        soundEffectManager = GetComponent<PlaySoundEffect>();
         wiiControllerIndex = 0;
     }
     void OnGUI()
@@ -121,19 +141,34 @@ public class ShakeWiiControls : MonoBehaviour {
             int[] values = {accX, accY, accZ};
             int maxAcc = Mathf.Max(values);
 
-            if (controller.isGrounded) {
+            // check if nunchuck is available, if it is we use it to rotate
+            if(wiimote_isExpansionPortEnabled(wiiControllerIndex))
+            {
+                accX = wiimote_getNunchuckAccX(wiiControllerIndex) - 125;
+                transform.Rotate(0, accX * 4 * Time.deltaTime, 0);
+            } // If another controller is present we use that for rotation
+            else if(wiimote_available(1)) 
+            {
+                accY = wiimote_getAccY(1) - 125;
+                transform.Rotate(0, -accY * rotationSpeed * Time.deltaTime, 0);
+            }
 
+
+            if (controller.isGrounded) {
+                moveDirection.y = 0;
                 if (maxAcc > flickThreshold)
                 {   
                     float speed = (maxAcc - flickThreshold)*flickScale;
                     speed = Mathf.Clamp(speed, 0, maxSpeed);
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
+                    soundEffectManager.playMoveSound();
                 }
 
                 if (wiimote_getButtonB(wiiControllerIndex)) {
                     Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                     moveDirection += breakForce;
+                    soundEffectManager.playBrakeSound(controller.velocity.magnitude);
                 }
 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
@@ -141,14 +176,30 @@ public class ShakeWiiControls : MonoBehaviour {
                 moveDirection *= fric;
                 if(moveDirection.magnitude < 0.1)
                     moveDirection = Vector3.zero;
+
+                if(wiimote_isExpansionPortEnabled(wiiControllerIndex))
+                {
+
+                    if (wiimote_getButtonNunchuckZ(wiiControllerIndex) || wiimote_getButtonNunchuckC(wiiControllerIndex))
+                    {
+                        soundEffectManager.playJumpSound();
+                        moveDirection.y = jumpSpeed;
+                    }
+                }
+                else if(wiimote_available(1))
+                {
+                    if (wiimote_getButton1(1) || wiimote_getButton2(1))
+                    {
+                        soundEffectManager.playJumpSound();
+                        moveDirection.y = jumpSpeed;
+                    }
+                }
             }
+
+            moveDirection.y -= gravity * Time.deltaTime;
 
             controller.Move(moveDirection * Time.deltaTime);
         }
-
-    }
-    void OnApplicationQuit() 
-    {
 
     }
 }

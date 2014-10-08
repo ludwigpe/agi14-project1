@@ -26,13 +26,13 @@ public class HighScore : MonoBehaviour
     // High Score logic
     private bool checkScore = true;
     private bool inputName = false;
+    private bool firstCharacterEnter = true; // Is the character entered the first character to be entered?
     private int takenEntryIndex;
     private int maxScoreNameLength = 20;    // Max characters that score name entry can consist of
 
     // Use this for initialization
     void Start()
     {
-
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         if (gameControllerObject != null)
         {
@@ -43,7 +43,6 @@ public class HighScore : MonoBehaviour
             Debug.Log("Cannot find 'GameController' script");
         }
     }
-
 
     // Update is called once per frame
     void Update()
@@ -79,7 +78,16 @@ public class HighScore : MonoBehaviour
                 }
                 else if (name.Length + 1 <= maxScoreNameLength)
                 {
-                    name += c;
+
+                    if (firstCharacterEnter)
+                    {
+                        name = c.ToString();
+                        firstCharacterEnter = false;
+                    }
+                    else
+                    {
+                        name += c;
+                    }
                 }
             }
         }
@@ -156,12 +164,12 @@ public class HighScore : MonoBehaviour
                 checkScore = false;
             }
         }
-        
+
         float entryHeight = 35;
         GUILayout.BeginArea(highScoreRect, "High Score", scoreTableStyle);
         for (int i = 0; i < 10; i++)
         {
-            
+
             // Mark selected entry with color
             if (inputName && i == takenEntryIndex)
             {
@@ -176,7 +184,7 @@ public class HighScore : MonoBehaviour
             {
                 GUI.contentColor = defaultTextColor;
             }
-            
+
             string entryName = PlayerPrefs.GetString(i + "HScoreName");
             int entryScore = PlayerPrefs.GetInt(i + "HScore");
 
@@ -185,7 +193,7 @@ public class HighScore : MonoBehaviour
             GUILayout.Label( (i+1)+ ": ", scoreIndexStyle, GUILayout.Width(10.0F), GUILayout.Height(entryHeight));
             GUILayout.Label( entryName, scoreEntryStyle, GUILayout.Width(highScoreRect.width*0.6F), GUILayout.Height(entryHeight));
             GUILayout.Label( entryScore.ToString(), scorePointStyle, GUILayout.Height(entryHeight));
-           
+
             GUILayout.EndHorizontal();
 
         }
