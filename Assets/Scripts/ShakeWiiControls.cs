@@ -168,7 +168,10 @@ public class ShakeWiiControls : MonoBehaviour {
                 if (wiimote_getButtonB(wiiControllerIndex)) {
                     Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                     moveDirection += breakForce;
-                    soundEffectManager.playBrakeSound(controller.velocity.magnitude);
+
+                    // play brake sound, according to movement along x and z-axis
+                    Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
+                    soundEffectManager.playBrakeSound(forward.magnitude);
                 }
 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
@@ -204,9 +207,6 @@ public class ShakeWiiControls : MonoBehaviour {
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         name = hit.gameObject.name;
-        Debug.Log(hit.normal);
-        
-        
         if(hit.gameObject.name.Equals("Walls"))
         {
             float mag = Vector3.Dot(moveDirection, hit.normal);

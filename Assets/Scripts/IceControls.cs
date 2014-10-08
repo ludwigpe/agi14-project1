@@ -40,7 +40,10 @@ public class IceControls : MonoBehaviour
             {
                 Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                 moveDirection += breakForce;
-                soundEffectManager.playBrakeSound(charController.velocity.magnitude);
+
+                // play brake sound, according to movement along x and z-axis
+                Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
+                soundEffectManager.playBrakeSound(forward.magnitude);
             }
             if (Input.GetButton("Jump"))
             {
@@ -60,9 +63,6 @@ public class IceControls : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         name = hit.gameObject.name;
-        Debug.Log(hit.normal);
-
-
         if(hit.gameObject.name.Equals("Walls"))
         {
             float mag = Vector3.Dot(moveDirection, hit.normal);
