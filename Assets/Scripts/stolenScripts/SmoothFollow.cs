@@ -36,8 +36,7 @@ public class SmoothFollow : MonoBehaviour
             this.transform.rotation = defaultPosition.rotation;
             return;
         }
-            
-        
+           
         // Calculate the current rotation angles
         float wantedRotationAngle = target.eulerAngles.y;
         float wantedHeight = target.position.y + height;

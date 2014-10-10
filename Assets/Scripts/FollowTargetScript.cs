@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Component that makes an object follow another object.
-public class FollowTargetScript : MonoBehaviour {
-
-	public Transform target;
-	public float persistentChaseDistance;		// At which distance the ghost will follow more precisely
-	public float destinationUpdateFrequency;	// Amount of seconds between every update of the destination
-	NavMeshAgent agent;
+/// <summary>
+/// This class makes the object it is attached to follow a target in a stupid way.
+/// </summary>
+public class FollowTargetScript : MonoBehaviour
+{
+    public Transform target;
+    public float persistentChaseDistance;		// At which distance the ghost will follow more precisely
+    public float destinationUpdateFrequency;	// Amount of seconds between every update of the destination
+    NavMeshAgent agent;
 
     // GameController link
     private GameController gameController;
 
-	void Start () {
-		agent = GetComponent<NavMeshAgent>();
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
         audio.Play();
 
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
@@ -26,18 +29,17 @@ public class FollowTargetScript : MonoBehaviour {
             Debug.Log("Cannot find 'GameController' script");
         }
 
-		// Update target position at a slowed down frequency to simulate AI stupidity
-		InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        // Update target position at a slowed down frequency to simulate AI stupidity
+        InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
+    }
 
-
+    void Update()
+    {
         // Stop idle sound when game is over
         if (gameController.GameLost || gameController.GameWon)
         {
             audio.Stop();
+            CancelInvoke("UpdateDestination");
         }
 
 		// Update the target destination every frame when the two objects are close to eachother
@@ -48,12 +50,13 @@ public class FollowTargetScript : MonoBehaviour {
         {
             UpdateDestination();
         }
-
-			
 	}
 
-	// Update this objects target destination.
-	void UpdateDestination () {
+	/// <summary>
+    /// Updates the destination for the NavMeshAgents path.
+    /// </summary>
+	void UpdateDestination () 
+    {
         if (!target)
         {
             agent.SetDestination(this.transform.position);
@@ -61,6 +64,18 @@ public class FollowTargetScript : MonoBehaviour {
         {
             agent.SetDestination(target.position);
         }
-		
 	}
+
+    /// <summary>
+    /// Ghost has collided with something.
+    /// </summary>
+    /// <param name="collision">Collision object.</param>
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
+        {
+            DeathCheck deathCheck = collision.gameObject.GetComponent<DeathCheck>();
+            deathCheck.Kill();
+        }
+    }
 }

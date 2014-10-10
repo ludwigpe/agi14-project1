@@ -3,17 +3,17 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// Wii controller handler.
+/// </summary>
 public class WiiControllerHandler : MonoBehaviour {
 
     [DllImport ("UniWii")]
     private static extern void wiimote_start();
-    
     [DllImport ("UniWii")]
     private static extern void wiimote_stop();
-    
     [DllImport ("UniWii")]
     private static extern int wiimote_count();
-    
     [DllImport ("UniWii")]
     private static extern byte wiimote_getAccX(int which);
     [DllImport ("UniWii")]
@@ -31,11 +31,6 @@ public class WiiControllerHandler : MonoBehaviour {
             wiimote_start();
 	}
 	
-    void OnGUI()
-    {
-
-    }
-
 	// Update is called once per frame
 	void Update () {
         int c = wiimote_count();
@@ -44,7 +39,6 @@ public class WiiControllerHandler : MonoBehaviour {
             gameController.PlayersConnected = true;
             isDone = true;
         }
-            
 	}
 
     void OnApplicationQuit() 

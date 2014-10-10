@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Handles the collision related logic with Pellets (i.e. increase score).
+/// </summary>
 public class Pellet_Collision : MonoBehaviour 
 {
 	// How many points one pellet is worth
@@ -40,10 +43,5 @@ public class Pellet_Collision : MonoBehaviour
             AudioSource.PlayClipAtPoint(sound_consume_pellet, transform.position);
 			Destroy (this.gameObject);
 		}
-	}
-
-	// Update is called once per frame
-	void Update () 
-    {
 	}
 }

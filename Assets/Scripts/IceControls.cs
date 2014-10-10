@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The script that takes input from keyboard and controls the player
+/// like he is on ice.
+/// </summary>
 public class IceControls : MonoBehaviour 
 {
     public float speed = 6.0F;
@@ -40,7 +44,10 @@ public class IceControls : MonoBehaviour
             {
                 Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                 moveDirection += breakForce;
-                soundEffectManager.playBrakeSound(charController.velocity.magnitude);
+
+                // play brake sound, according to movement along x and z-axis
+                Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
+                soundEffectManager.playBrakeSound(forward.magnitude);
             }
             if (Input.GetButton("Jump"))
             {
@@ -55,4 +62,18 @@ public class IceControls : MonoBehaviour
 		moveDirection.y -= gravity * Time.deltaTime;
         charController.Move(moveDirection * Time.deltaTime);
 	}
+
+    /// <summary>
+    /// The player has collided with something.
+    /// If the collision is with a wall we remove the velocity in the direction towards the wall.
+    /// </summary>
+    /// <param name="hit">Hit.</param>
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.name.Equals("Walls"))
+        {
+            float mag = Vector3.Dot(moveDirection, hit.normal);
+            moveDirection -= (mag * hit.normal);
+        }
+    }
 }
