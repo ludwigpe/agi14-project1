@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Death check.
+/// This class is used to check if the player has been killed by a ghost 
+/// or fallen out from the map.
+/// </summary>
 public class DeathCheck : MonoBehaviour
 {
 	// Death
@@ -45,24 +50,29 @@ public class DeathCheck : MonoBehaviour
         if (gameRunning)
         {
             gameController.GameLost = true;
-            SetCameraDefaultPos();
             MonoBehaviour[] scriptComponents = GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scriptComponents)
             {
-                script.enabled = false;
+                if(script != null)
+                    script.enabled = false;
             }
+            SetCameraDefaultPos();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // check if player has fallen below the map.
         if (transform.position.y < -DEATH_HEIGHT) {
             Kill();
 
 		}
     }
 
+    /// <summary>
+    /// Reset the camera to the default topdown position
+    /// </summary>
     void SetCameraDefaultPos()
     {
         GameObject defaultPos = GameObject.FindGameObjectWithTag("DEFAULTCAMPOS");

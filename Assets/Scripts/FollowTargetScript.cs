@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Component that makes an object follow another object.
+/// <summary>
+/// This class makes the object it is attached to follow a target in a stupid way.
+/// </summary>
 public class FollowTargetScript : MonoBehaviour
 {
     public Transform target;
@@ -31,15 +33,13 @@ public class FollowTargetScript : MonoBehaviour
         InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
     }
 
-    // Update is called once per frame
     void Update()
     {
-
-
         // Stop idle sound when game is over
         if (gameController.GameLost || gameController.GameWon)
         {
             audio.Stop();
+            CancelInvoke("UpdateDestination");
         }
 
 		// Update the target destination every frame when the two objects are close to eachother
@@ -50,12 +50,13 @@ public class FollowTargetScript : MonoBehaviour
         {
             UpdateDestination();
         }
-
-
 	}
 
-	// Update this objects target destination.
-	void UpdateDestination () {
+	/// <summary>
+    /// Updates the destination for the NavMeshAgents path.
+    /// </summary>
+	void UpdateDestination () 
+    {
         if (!target)
         {
             agent.SetDestination(this.transform.position);
@@ -63,7 +64,6 @@ public class FollowTargetScript : MonoBehaviour
         {
             agent.SetDestination(target.position);
         }
-
 	}
 
     /// <summary>

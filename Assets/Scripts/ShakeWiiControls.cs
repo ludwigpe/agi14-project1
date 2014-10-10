@@ -2,9 +2,13 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-
+/// <summary>
+/// Shake wii controls. This is the scirpt that calls and handle input from the wiimotes and
+/// controls the player. It handles the player the same way as ice controls do.
+/// </summary>
 public class ShakeWiiControls : MonoBehaviour {
 
+    #region IMPORTS
     [DllImport ("UniWii")]
     private static extern void wiimote_start();
     [DllImport ("UniWii")]
@@ -42,23 +46,22 @@ public class ShakeWiiControls : MonoBehaviour {
     [DllImport ("UniWii")]
     private static extern bool wiimote_getButton2(int which);
     [DllImport ("UniWii")]
+    private static extern void wiimote_rumble( int which, float duration);
+    [DllImport ("UniWii")]
     private static extern double wiimote_getBatteryLevel( int which );
-
     [DllImport ("UniWii")]
     private static extern bool wiimote_isExpansionPortEnabled( int which );
-    
     [DllImport ("UniWii")]
     private static extern byte wiimote_getNunchuckStickX(int which);
-    
     [DllImport ("UniWii")]
     private static extern byte wiimote_getNunchuckAccX(int which);
     [DllImport ("UniWii")]
     private static extern byte wiimote_getNunchuckAccZ(int which);
-    
     [DllImport ("UniWii")]
     private static extern bool wiimote_getButtonNunchuckC(int which);
     [DllImport ("UniWii")]
     private static extern bool wiimote_getButtonNunchuckZ(int which);
+    #endregion 
 
     public bool DEBUGGING = false;
 
@@ -76,6 +79,8 @@ public class ShakeWiiControls : MonoBehaviour {
     private Vector3 moveDirection = Vector3.zero;
     private byte centerOffset = 125;
     private PlaySoundEffect soundEffectManager;
+    private bool wiimote1Available = false;
+    private bool wiimote2Available = false;
     // Use this for initialization
     void Start () 
     {
@@ -90,7 +95,6 @@ public class ShakeWiiControls : MonoBehaviour {
             int c = wiimote_count();
             if (c > 0)
             {
-                
                 for (int i=0; i < c; i++)
                 {
                     GUILayout.Label("Wiimote " + i + " found!");
@@ -104,8 +108,7 @@ public class ShakeWiiControls : MonoBehaviour {
                 byte accZ = wiimote_getAccZ(wiiControllerIndex);
                 
                 double battery = wiimote_getBatteryLevel(wiiControllerIndex);
-                
-                
+                       
                 GUILayout.Label("Yaw: " + yaw);
                 GUILayout.Label("Pitch: " + pitch);
                 GUILayout.Label("Roll: " + roll);
@@ -124,16 +127,15 @@ public class ShakeWiiControls : MonoBehaviour {
             
             GUILayout.EndHorizontal();
         }
-
     }
     
     void Update () 
     {
-
         CharacterController controller = GetComponent<CharacterController>();
-        
+        wiimote1Available = wiimote_available(0);
+        wiimote2Available = wiimote_available(1);
         // Rotate player around y-axis
-        if (wiimote_available (wiiControllerIndex)) {
+        if (wiimote1Available) {
 
             int accX = Mathf.Abs( wiimote_getAccX(wiiControllerIndex) - centerOffset);
             int accY = Mathf.Abs( wiimote_getAccY(wiiControllerIndex) - centerOffset);
@@ -147,7 +149,7 @@ public class ShakeWiiControls : MonoBehaviour {
                 accX = wiimote_getNunchuckAccX(wiiControllerIndex) - 125;
                 transform.Rotate(0, accX * 4 * Time.deltaTime, 0);
             } // If another controller is present we use that for rotation
-            else if(wiimote_available(1)) 
+            else if(wiimote2Available) 
             {
                 accY = wiimote_getAccY(1) - 125;
                 transform.Rotate(0, -accY * rotationSpeed * Time.deltaTime, 0);
@@ -182,14 +184,13 @@ public class ShakeWiiControls : MonoBehaviour {
 
                 if(wiimote_isExpansionPortEnabled(wiiControllerIndex))
                 {
-
                     if (wiimote_getButtonNunchuckZ(wiiControllerIndex) || wiimote_getButtonNunchuckC(wiiControllerIndex))
                     {
                         soundEffectManager.playJumpSound();
                         moveDirection.y = jumpSpeed;
                     }
                 }
-                else if(wiimote_available(1))
+                else if(wiimote2Available)
                 {
                     if (wiimote_getButton1(1) || wiimote_getButton2(1))
                     {
@@ -206,9 +207,16 @@ public class ShakeWiiControls : MonoBehaviour {
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        name = hit.gameObject.name;
         if(hit.gameObject.name.Equals("Walls"))
         {
+            float speed = Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2);
+            if( speed > 1 )
+            {
+                if(wiimote1Available)
+                {
+//                    wiimote_rumble(0, 1.0f);
+                }
+            }
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
         }

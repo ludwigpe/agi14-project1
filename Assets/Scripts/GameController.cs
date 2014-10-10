@@ -12,13 +12,12 @@ public class GameController : MonoBehaviour {
     public bool DEBUGGING;
     public Rect restartButton;
 
-
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
     public Transform spawnPoint;
-//    private int secondsPassed;
-    private const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
+
+    public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
     private float inGameTimePassed;
 
 	// Keeps track of nr of pellets left, when zero => victory
@@ -29,8 +28,6 @@ public class GameController : MonoBehaviour {
     private bool playersConnected = false;
     private bool gameStarted = false;
 
-	// Score counter
-	public GUIText scoreText;
 	private int scoreCounter;
 
     // Sound clips
@@ -51,28 +48,29 @@ public class GameController : MonoBehaviour {
     public Material pinky_mat;
     public Material clyde_mat;
 
-	/// Use this for initialization
+	//// <summary>
+    /// Use this for initialization.
+    /// </summary>
 	void Start ()
     {
         ResetGame();
-		UpdateScore ();
 	}
 
+    /// <summary>
+    /// Instatiate playerprefab to the scene. Set the camera to follow the player.
+    /// </summary>
     void InstatiatePlayer()
     {
-
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity) as GameObject;
-        player.GetComponent<FPWiiControls>().gc = this;
         player.GetComponent<ShakeWiiControls>().gc = this;
         if (DEBUGGING)
         {
-            player.GetComponent<FPWiiControls>().enabled = false;
             player.GetComponent<ShakeWiiControls>().enabled = false;
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
         Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
-
     }
+
     /// <summary>
     /// Creates and setups the four AI ghosts.
     /// </summary>
@@ -130,8 +128,9 @@ public class GameController : MonoBehaviour {
         }
         if (!gameIsOver && gameStarted)
         {
-
             inGameTimePassed += Time.deltaTime;
+
+            // check if player has won or lost
             CheckVictoryConditions();
 
             if (gameWon)
@@ -149,15 +148,10 @@ public class GameController : MonoBehaviour {
             {
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
-
-                // MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
-                // foreach (MonoBehaviour script in scriptComponents)
-                // {
-                //     script.enabled = false;
-                // }
             }
-
+ 
         }
+
         if (gameIsOver && !gameStarted)
         {
             if(Input.GetKeyDown(KeyCode.F1))
@@ -169,15 +163,6 @@ public class GameController : MonoBehaviour {
             }
         }
 	}
-
-    /// <summary>
-    /// Updates the time text to time passed since beginning of the game in seconds.
-    /// </summary>
-
-    private void UpdateTimeText()
-    {
-//        inGameTimePassed += Time.deltaTime;
-    }
 
     /// <summary>
     /// Check victory/losing conditions.
@@ -206,13 +191,11 @@ public class GameController : MonoBehaviour {
 	public void AddScore(int points)
     {
 		scoreCounter += points;
-		UpdateScore ();
 	}
 
 	/// <summary>
 	/// Increments the pellet counter.
 	/// </summary>
-
 	public void IncrementPelletCounter()
     {
 		nrPelletsLeft++;
@@ -221,40 +204,13 @@ public class GameController : MonoBehaviour {
 	/// <summary>
 	/// Decrements the pellet counter.
 	/// </summary>
-
 	public void DecrementPelletCounter()
     {
-
 		nrPelletsLeft--;
 	}
 
-	/// <summary>
-	/// Updates the score.
-	/// </summary>
-	void UpdateScore()
-    {
-		scoreText.text = "Score: " + scoreCounter;
-	}
-
     /// <summary>
-    /// Gets wiimote index for the third person controls.
-    /// </summary>
-    /// <returns>The third person index.</returns>
-    public int GetThirdPersonIndex()
-    {
-        return 0;
-    }
-    /// <summary>
-    /// Gets wiimote index for the first person controls.
-    /// </summary>
-    /// <returns>The first person index.</returns>
-    public int GetFirstPersonIndex()
-    {
-        return 1;
-    }
-    /// <summary>
-    /// Raises the application quit event.
-    /// Close all connections to wiimotes
+    /// Resets the game.
     /// </summary>
     void ResetGame()
     {
@@ -262,8 +218,6 @@ public class GameController : MonoBehaviour {
         gameWon = false;
         gameLost = false;
         inGameTimePassed = 0;
-        // gameStarted = true;
-
     }
 
     #region Accessors
@@ -304,7 +258,7 @@ public class GameController : MonoBehaviour {
     {
         get
         {
-            return MAX_TIME - (int)Mathf.Floor(inGameTimePassed);
+            return MAX_TIME - Mathf.FloorToInt(inGameTimePassed);
         }
     }
 

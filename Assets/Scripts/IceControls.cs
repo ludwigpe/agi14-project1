@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The script that takes input from keyboard and controls the player
+/// like he is on ice.
+/// </summary>
 public class IceControls : MonoBehaviour 
 {
     public float speed = 6.0F;
@@ -59,10 +63,13 @@ public class IceControls : MonoBehaviour
         charController.Move(moveDirection * Time.deltaTime);
 	}
 
-    
+    /// <summary>
+    /// The player has collided with something.
+    /// If the collision is with a wall we remove the velocity in the direction towards the wall.
+    /// </summary>
+    /// <param name="hit">Hit.</param>
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        name = hit.gameObject.name;
         if(hit.gameObject.name.Equals("Walls"))
         {
             float mag = Vector3.Dot(moveDirection, hit.normal);
