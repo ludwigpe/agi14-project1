@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pellet_Collision : MonoBehaviour {
-
+/// <summary>
+/// Handles the collision related logic with Pellets (i.e. increase score).
+/// </summary>
+public class Pellet_Collision : MonoBehaviour 
+{
 	// How many points one pellet is worth
 	public int scoreValue = 10;
 
 	// Link to the game controller
 	private GameController gameController;
 
+    // Sounds
+    public AudioClip sound_consume_pellet;
+
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null)
 		{
@@ -27,16 +34,14 @@ public class Pellet_Collision : MonoBehaviour {
 	/// Something has collided with the pellet.
 	/// </summary>
 	/// <param name="other">Collider object.</param>
-	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag("Player")) {
+	void OnTriggerEnter(Collider other) 
+    {
+		if (other.gameObject.CompareTag("Player")) 
+        {
 			gameController.AddScore(scoreValue);
 			gameController.DecrementPelletCounter();
+            AudioSource.PlayClipAtPoint(sound_consume_pellet, transform.position);
 			Destroy (this.gameObject);
 		}
-	}
-
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }
