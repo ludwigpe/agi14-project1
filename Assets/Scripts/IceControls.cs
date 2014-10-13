@@ -18,49 +18,66 @@ public class IceControls : MonoBehaviour
     // Link to components
     private PlaySoundEffect soundEffectManager;
     private CharacterController charController;
+    private AnimationManager animationManager;
+    private GameController gameController;
 
     // Use this for initialization
 	void Start () 
     {
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
+        else
+        {
+            Debug.Log("Cannot find 'GameController' script");
+        }
+        
+        animationManager = GetComponent<AnimationManager>();
         soundEffectManager = GetComponent<PlaySoundEffect>();
         charController = GetComponent<CharacterController>();
 	}
 	// Update is called once per frame
 	void Update () 
     {
-        // Rotate player around y-axis
-        transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
-        if (charController.isGrounded) 
+        if (!gameController.ControlsDisabled)
         {
-            moveDirection.y = 0;
-            if (Input.GetKey(KeyCode.UpArrow)) 
+            // Rotate player around y-axis
+            transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
+            if (charController.isGrounded)
             {
-                // player pressed up-key so applie some force to the movement
-                Vector3 force = transform.forward * speed * Time.deltaTime;
-                moveDirection += force;
-                soundEffectManager.playMoveSound();
-            }
-            if (Input.GetKey(KeyCode.DownArrow)) 
-            {
-                Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
-                moveDirection += breakForce;
+                moveDirection.y = 0;
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    // player pressed up-key so applie some force to the movement
+                    Vector3 force = transform.forward * speed * Time.deltaTime;
+                    moveDirection += force;
+                    animationManager.PlayMoveAnimation();
+                    soundEffectManager.playMoveSound();
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
+                    moveDirection += breakForce;
 
-                // play brake sound, according to movement along x and z-axis
-                Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
-                soundEffectManager.playBrakeSound(forward.magnitude);
+                    // play brake sound, according to movement along x and z-axis
+                    Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
+                    soundEffectManager.playBrakeSound(forward.magnitude);
+                }
+                if (Input.GetButton("Jump"))
+                {
+                    moveDirection.y = jumpSpeed;
+                    soundEffectManager.playJumpSound();
+                }
+                
+                float fric = Mathf.Clamp(100 - friction, 0, 100);
+                fric = fric / 100; // convert to percentage
+                moveDirection *= fric;
             }
-            if (Input.GetButton("Jump"))
-            {
-                moveDirection.y = jumpSpeed;
-                soundEffectManager.playJumpSound();
-            }
-            
-            float fric = Mathf.Clamp(100 - friction, 0, 100);
-            fric = fric / 100; // convert to percentage
-            moveDirection *= fric;
-		}
-		moveDirection.y -= gravity * Time.deltaTime;
-        charController.Move(moveDirection * Time.deltaTime);
+            moveDirection.y -= gravity * Time.deltaTime;
+            charController.Move(moveDirection * Time.deltaTime);
+        }
 	}
 
     /// <summary>

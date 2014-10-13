@@ -14,6 +14,10 @@ public class DeathCheck : MonoBehaviour
 
     // Link with GameController
     private GameController gameController;
+    private AnimationManager animationManager;
+    private PlaySoundEffect soundEffectManager;
+
+    private bool isDead = false;
 
     // Use this for initialization
     void Start()
@@ -27,6 +31,8 @@ public class DeathCheck : MonoBehaviour
         {
             Debug.Log("Cannot find 'GameController' script");
         }
+        animationManager = GetComponent<AnimationManager>();
+        soundEffectManager = GetComponent<PlaySoundEffect>();
     }
 
     /// <summary>
@@ -35,9 +41,15 @@ public class DeathCheck : MonoBehaviour
     /// <param name="collider">Collider object.</param>
     void OnControllerColliderHit(ControllerColliderHit collider)
     {
-        if (collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
+        if (!isDead && collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
         {
-            Kill();
+            CharacterController charController = GetComponent<CharacterController>();
+            charController.enabled = false;
+            gameController.ControlsDisabled = true;
+            
+            soundEffectManager.PlayLifeLostSound();
+            animationManager.PlayDeathAnimation();
+            isDead = true;
         }
     }
 
@@ -64,9 +76,9 @@ public class DeathCheck : MonoBehaviour
     void Update()
     {
         // check if player has fallen below the map.
-        if (transform.position.y < -DEATH_HEIGHT) {
+        if (transform.position.y < -DEATH_HEIGHT) 
+        {
             Kill();
-
 		}
     }
 
@@ -78,5 +90,17 @@ public class DeathCheck : MonoBehaviour
         GameObject defaultPos = GameObject.FindGameObjectWithTag("DEFAULTCAMPOS");
         this.camera.transform.position = defaultPos.transform.position;
         this.camera.transform.rotation = defaultPos.transform.rotation;
+    }
+
+    public bool IsDead
+    {
+        get
+        {
+            return isDead;
+        }
+        set
+        {
+            isDead = value;
+        }
     }
 }

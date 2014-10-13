@@ -10,6 +10,7 @@ public class GUIHandler : MonoBehaviour
 
     public GUIStyle endTextStyle;
     public GUIStyle scoreStyle;
+    public GUIStyle comboStyle;
 
     public string winText;
     public string failText;
@@ -78,6 +79,8 @@ public class GUIHandler : MonoBehaviour
             string score = gameController.Score.ToString();
             DrawScoreAndTime(p1Rect, timeLeft, score, scoreStyle);
             DrawScoreAndTime(p2Rect, timeLeft, score, scoreStyle);
+            DrawComboCounter(p1Rect);
+            DrawComboCounter(p2Rect);
         }
 
         if (gameController.DEBUGGING)
@@ -124,6 +127,14 @@ public class GUIHandler : MonoBehaviour
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
+        GUILayout.EndArea();
+    }
+
+    void DrawComboCounter(Rect container)
+    {
+        int combo = gameController.GetComboCounter();
+        GUILayout.BeginArea(container);
+        GUILayout.Label("Combo: " + combo, comboStyle);
         GUILayout.EndArea();
     }
 }

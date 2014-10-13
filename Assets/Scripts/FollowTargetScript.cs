@@ -72,10 +72,24 @@ public class FollowTargetScript : MonoBehaviour
     /// <param name="collision">Collision object.</param>
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
+        GameObject collidee = collision.gameObject;
+        if (collidee.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
         {
             DeathCheck deathCheck = collision.gameObject.GetComponent<DeathCheck>();
-            deathCheck.Kill();
+            if (!deathCheck.IsDead)
+            {
+                CharacterController charController = collidee.GetComponent<CharacterController>();
+                charController.enabled = false;
+                gameController.ControlsDisabled = true;
+                
+                AnimationManager animationManager = collidee.GetComponent<AnimationManager>();
+                animationManager.PlayDeathAnimation();
+                
+                PlaySoundEffect soundEffectManager = collidee.GetComponent<PlaySoundEffect>();
+                soundEffectManager.PlayLifeLostSound();
+                
+                deathCheck.IsDead = true;
+            }
         }
     }
 }

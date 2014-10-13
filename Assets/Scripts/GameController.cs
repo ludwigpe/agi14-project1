@@ -25,10 +25,19 @@ public class GameController : MonoBehaviour {
 	private bool gameLost = false;
     private bool gameWon = false;
     private bool gameIsOver = true;
+    private bool controlsDisabled = false;
     private bool playersConnected = false;
     private bool gameStarted = false;
 
 	private int scoreCounter;
+
+    // Combo counter
+    private float comboCounter;                 // Current combo value
+    private float comboDecayRate = 1F;          // At which rate that the combo should decay
+    private float comboIncrease = 0.75F;        // How much combo should be increased per pellet consumed
+    private Color minComboColor = Color.green;  // Color of lowest combo
+    private Color maxComboColor = Color.red;    // Color of highest combo
+    private float useMaxComboColorValue = 5F;   // Value at which the maxComboColor is used
 
     // Sound clips
     public AudioClip sound_victory;
@@ -129,7 +138,7 @@ public class GameController : MonoBehaviour {
         if (!gameIsOver && gameStarted)
         {
             inGameTimePassed += Time.deltaTime;
-
+            UpdateComboCounter(Time.deltaTime);
             // check if player has won or lost
             CheckVictoryConditions();
 
@@ -184,6 +193,30 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Decreases the combo counter based on time passed.
+    /// </summary>
+    /// <param name="dt">Amount of seconds passed.</param>
+    private void UpdateComboCounter(float dt)
+    {
+        comboCounter = Mathf.Max(comboCounter - dt * comboDecayRate, 1);
+    }
+
+    /// <summary>
+    /// Increases the value of the combo counter.
+    /// </summary>
+    /// <returns>Current value of combo counter.</returns>
+    public float IncreaseComboCounter()
+    {
+        comboCounter += comboIncrease;
+        return comboCounter;
+    }
+
+    public int GetComboCounter()
+    {
+        return Mathf.FloorToInt(comboCounter);
+    }
+
 	/// <summary>
 	/// Adds points to the score.
 	/// </summary>
@@ -217,6 +250,8 @@ public class GameController : MonoBehaviour {
         gameIsOver = true;
         gameWon = false;
         gameLost = false;
+        comboCounter = 1f;
+        scoreCounter = 0;
         inGameTimePassed = 0;
     }
 
@@ -284,6 +319,18 @@ public class GameController : MonoBehaviour {
         set
         {
             playersConnected = value;
+        }
+    }
+
+    public bool ControlsDisabled
+    {
+        get
+        {
+            return controlsDisabled;
+        }
+        set
+        {
+            controlsDisabled = value;
         }
     }
     #endregion

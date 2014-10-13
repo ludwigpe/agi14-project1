@@ -11,6 +11,10 @@ public class PlaySoundEffect : MonoBehaviour
     private AudioSource audio_source_brake;
     private AudioSource audio_source_move;
     private AudioSource audio_source_jump;
+    private AudioSource audio_source_life_lost;
+
+    // Audio clips
+    public AudioClip audio_clip_eat_pellet;
 
     private bool brakeSoundStarted = false;
     private int framesWithoutBrakeSound = 0;
@@ -19,17 +23,24 @@ public class PlaySoundEffect : MonoBehaviour
     private const int MAX_FRAMES_WO_BRAKE = 1;  // After this amount of frames without brake sfx => stop it
     private const float MIN_VEL_MAG = 0.1f;     // Minimum velocity magnitude to play brake sound effect
 
+    // Pellet Pickup Sound Pitch 
+    private const float PITCH_FACTOR = 0.3F;
+    private const float PITCH_CONSTANT = 1 - PITCH_FACTOR;
+    private const float MIN_PITCH = 1F;
+    private const float MAX_PITCH = 3F;
+
     // Use this for initialization
     void Start()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
-        if (audioSources.Length < 3)
+        if (audioSources.Length < 4)
         {
             Debug.Log("Could not find all AudioSources.");
         }
         audio_source_brake = audioSources[0];
         audio_source_move = audioSources[1];
         audio_source_jump = audioSources[2];
+        audio_source_life_lost = audioSources[3];
     }
 
     /// <summary>
@@ -89,5 +100,41 @@ public class PlaySoundEffect : MonoBehaviour
         framesWithoutBrakeSound = 0;
         brakeSoundHitThisFrame = true;
         return result;
+    }
+
+    /// <summary>
+    /// Tries to play the life lost sound effect.
+    /// </summary>
+    /// <returns>True if successful.</returns>
+    public bool PlayLifeLostSound()
+    {
+        bool result = false;
+        if (!audio_source_life_lost.isPlaying)
+        {
+            audio_source_life_lost.Play();
+            result = true;
+        }
+        return result;
+    }
+    
+    /// <summary>
+    /// Plays the eat pellet sound effect.
+    /// </summary>
+    /// <param name="currentCombo">Current combo value.</param>
+    /// <returns>True if successful.</returns>
+    public void PlayEatPellet(float currentCombo)
+    {
+        float pitch = currentCombo * PITCH_FACTOR + PITCH_CONSTANT;
+        pitch = Mathf.Clamp(pitch, MIN_PITCH, MAX_PITCH);
+        
+        // Use temp AudioSource to allow for multiple simultaneously playing sfx
+        GameObject tempGO = new GameObject("TempAudio");            
+        tempGO.transform.position = this.transform.position;        
+        AudioSource aSource = tempGO.AddComponent<AudioSource>();   
+        aSource.clip = audio_clip_eat_pellet; 
+        aSource.pitch = pitch;
+        
+        aSource.Play();
+        Destroy(tempGO, audio_clip_eat_pellet.length); 
     }
 }
