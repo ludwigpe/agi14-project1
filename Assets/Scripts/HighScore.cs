@@ -150,7 +150,7 @@ public class HighScore : MonoBehaviour
    public void RenderHighScoreList(Rect container)
    {
         float width = Mathf.Min(500, container.width);
-        float height = Mathf.Min(450, container.height);
+        float height = Mathf.Min(480, container.height);
         float left = ((container.width - width) / 2) + container.x;
         float top = (container.height - height) / 2;
         Rect highScoreRect = new Rect(left, top, width, height);
@@ -196,7 +196,6 @@ public class HighScore : MonoBehaviour
             GUILayout.Label( entryScore.ToString(), scorePointStyle, GUILayout.Height(entryHeight));
 
             GUILayout.EndHorizontal();
-
         }
         GUILayout.EndArea();
     }

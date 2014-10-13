@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+
 /// <summary>
 /// Shake wii controls. This is the scirpt that calls and handle input from the wiimotes and
 /// controls the player. It handles the player the same way as ice controls do.
@@ -75,58 +76,16 @@ public class ShakeWiiControls : MonoBehaviour {
     public float maxSpeed = 20.0F;
     public float gravity = 10.0F;
 
-    private int wiiControllerIndex;
     private Vector3 moveDirection = Vector3.zero;
     private byte centerOffset = 125;
     private PlaySoundEffect soundEffectManager;
     private bool wiimote1Available = false;
     private bool wiimote2Available = false;
+
     // Use this for initialization
     void Start () 
     {
         soundEffectManager = GetComponent<PlaySoundEffect>();
-        wiiControllerIndex = 0;
-    }
-    void OnGUI()
-    {
-        if (DEBUGGING)
-        {
-            GUILayout.BeginVertical("box");
-            int c = wiimote_count();
-            if (c > 0)
-            {
-                for (int i=0; i < c; i++)
-                {
-                    GUILayout.Label("Wiimote " + i + " found!");
-                }
-                float yaw = wiimote_getYaw(wiiControllerIndex);
-                float pitch = wiimote_getPitch(wiiControllerIndex);
-                float roll = wiimote_getRoll(wiiControllerIndex);
-                
-                byte accX = wiimote_getAccX(wiiControllerIndex);
-                byte accY = wiimote_getAccY(wiiControllerIndex);
-                byte accZ = wiimote_getAccZ(wiiControllerIndex);
-                
-                double battery = wiimote_getBatteryLevel(wiiControllerIndex);
-                       
-                GUILayout.Label("Yaw: " + yaw);
-                GUILayout.Label("Pitch: " + pitch);
-                GUILayout.Label("Roll: " + roll);
-                
-                GUILayout.Label("AccX: " + accX);
-                GUILayout.Label("AccY: " + accY);
-                GUILayout.Label("AccZ: " + accZ);
-                
-                GUILayout.Label("Battery: " + battery);
-                
-                
-            } else
-            {
-                GUILayout.Label("Press the '1' and '2' buttons on your Wii Remote.");
-            }
-            
-            GUILayout.EndHorizontal();
-        }
     }
     
     void Update () 
@@ -137,16 +96,16 @@ public class ShakeWiiControls : MonoBehaviour {
         // Rotate player around y-axis
         if (wiimote1Available) {
 
-            int accX = Mathf.Abs( wiimote_getAccX(wiiControllerIndex) - centerOffset);
-            int accY = Mathf.Abs( wiimote_getAccY(wiiControllerIndex) - centerOffset);
-            int accZ = Mathf.Abs( wiimote_getAccZ(wiiControllerIndex) - centerOffset);
+            int accX = Mathf.Abs( wiimote_getAccX(0) - centerOffset);
+            int accY = Mathf.Abs( wiimote_getAccY(0) - centerOffset);
+            int accZ = Mathf.Abs( wiimote_getAccZ(0) - centerOffset);
             int[] values = {accX, accY, accZ};
             int maxAcc = Mathf.Max(values);
 
             // check if nunchuck is available, if it is we use it to rotate
-            if(wiimote_isExpansionPortEnabled(wiiControllerIndex))
+            if(wiimote_isExpansionPortEnabled(0))
             {
-                accX = wiimote_getNunchuckAccX(wiiControllerIndex) - 125;
+                accX = wiimote_getNunchuckAccX(0) - 125;
                 transform.Rotate(0, accX * 4 * Time.deltaTime, 0);
             } // If another controller is present we use that for rotation
             else if(wiimote2Available) 
@@ -167,7 +126,7 @@ public class ShakeWiiControls : MonoBehaviour {
                     soundEffectManager.playMoveSound();
                 }
 
-                if (wiimote_getButtonB(wiiControllerIndex)) {
+                if (wiimote_getButtonB(0)) {
                     Vector3 breakForce = moveDirection * -1 * breakPower * Time.deltaTime;
                     moveDirection += breakForce;
 
@@ -182,9 +141,9 @@ public class ShakeWiiControls : MonoBehaviour {
                 if(moveDirection.magnitude < 0.1)
                     moveDirection = Vector3.zero;
 
-                if(wiimote_isExpansionPortEnabled(wiiControllerIndex))
+                if(wiimote_isExpansionPortEnabled(0))
                 {
-                    if (wiimote_getButtonNunchuckZ(wiiControllerIndex) || wiimote_getButtonNunchuckC(wiiControllerIndex))
+                    if (wiimote_getButtonNunchuckZ(0) || wiimote_getButtonNunchuckC(0))
                     {
                         soundEffectManager.playJumpSound();
                         moveDirection.y = jumpSpeed;
@@ -205,6 +164,52 @@ public class ShakeWiiControls : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Draws the controller info. Render the wiicontroler values inside the container Rect.
+    /// </summary>
+    /// <param name="container">Container.</param>
+    /// <param name="controllerIndex">Controller index.</param>
+    void DrawControllerInfo(Rect container, int controllerIndex)
+    {
+        GUILayout.BeginArea(container);
+        bool available = (controllerIndex == 0) ? wiimote1Available : wiimote2Available;
+        if(available)
+        {
+            GUILayout.Label("Wiimote " + controllerIndex + " found!");
+
+            float yaw = wiimote_getYaw(controllerIndex);
+            float pitch = wiimote_getPitch(controllerIndex);
+            float roll = wiimote_getRoll(controllerIndex);
+            
+            byte accX = wiimote_getAccX(controllerIndex);
+            byte accY = wiimote_getAccY(controllerIndex);
+            byte accZ = wiimote_getAccZ(controllerIndex);
+            
+            double battery = wiimote_getBatteryLevel(controllerIndex);
+            
+            GUILayout.Label("Yaw: " + yaw);
+            GUILayout.Label("Pitch: " + pitch);
+            GUILayout.Label("Roll: " + roll);
+            
+            GUILayout.Label("AccX: " + accX);
+            GUILayout.Label("AccY: " + accY);
+            GUILayout.Label("AccZ: " + accZ);
+            
+            GUILayout.Label("Battery: " + battery);
+            
+        } else
+        {
+            GUILayout.Label("Press the '1' and '2' buttons on your Wii Remote.");
+        }
+        
+        GUILayout.EndArea();
+    }
+    
+    /// <summary>
+    /// The player has collided with something.
+    /// If the collision is with a wall we remove the velocity in the direction towards the wall.
+    /// </summary>
+    /// <param name="hit">Hit.</param>
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if(hit.gameObject.name.Equals("Walls"))
