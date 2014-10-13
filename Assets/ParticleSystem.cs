@@ -31,6 +31,7 @@ public class ParticleSystem : MonoBehaviour
 				ParticleLookAtTarget look = particle.GetComponent<ParticleLookAtTarget>();
 				look.target = Camera.main.transform;
 			}
+			Destroy(gameObject);
 		}
 	}
 
