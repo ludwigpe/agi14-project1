@@ -33,7 +33,8 @@ public class IceControls : MonoBehaviour
         {
             Debug.Log("Cannot find 'GameController' script");
         }
-        
+        // this is an ugly hack to get the pellet collision working properly.
+        moveDirection = transform.forward * 0.1F;
         animationManager = GetComponent<AnimationManager>();
         soundEffectManager = GetComponent<PlaySoundEffect>();
         charController = GetComponent<CharacterController>();
