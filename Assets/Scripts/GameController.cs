@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 /// gameplay functionality such as spawning AI and so forth.
 /// </summary>
 public class GameController : MonoBehaviour {
-
+    
     // General
     public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
     private float inGameTimePassed;
@@ -27,13 +27,14 @@ public class GameController : MonoBehaviour {
     private bool controlsDisabled = false;
     private bool playersConnected = false;
     private bool gameStarted = false;
-
 	private int scoreCounter;
 
     // Combo counter
-    private float comboCounter;                 // Current combo value
-    private float comboDecayRate = 1F;          // At which rate that the combo should decay
-    private float comboIncrease = 0.75F;        // How much combo should be increased per pellet consumed
+    private float comboCounter;     // Current combo value
+    [Tooltip("At which rate that the combo should decay")]
+    public float comboDecayRate = 1F;
+    [Tooltip("How much combo should be increased per pellet consumed")]    
+    public float comboIncrease = 0.75F;        
 
     // Sound clips
     public AudioClip sound_victory;
@@ -135,7 +136,6 @@ public class GameController : MonoBehaviour {
         {
             inGameTimePassed += Time.deltaTime;
             UpdateComboCounter(Time.deltaTime);
-            // check if player has won or lost
             CheckVictoryConditions();
 
             if (gameWon)
@@ -208,18 +208,14 @@ public class GameController : MonoBehaviour {
         return comboCounter;
     }
 
-    public int GetComboCounter()
-    {
-        return Mathf.FloorToInt(comboCounter);
-    }
-
 	/// <summary>
 	/// Adds points to the score.
 	/// </summary>
 	/// <param name="points">Amount of points to add.</param>
 	public void AddScore(int points)
     {
-		scoreCounter += points;
+        int scoreMultiplier = Mathf.FloorToInt(Mathf.Max(comboCounter, 1));
+        scoreCounter += points * scoreMultiplier;
 	}
 
 	/// <summary>
@@ -327,6 +323,14 @@ public class GameController : MonoBehaviour {
         set
         {
             controlsDisabled = value;
+        }
+    }
+
+    public float ComboCounter
+    {
+        get
+        {
+            return comboCounter;
         }
     }
     #endregion

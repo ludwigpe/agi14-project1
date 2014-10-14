@@ -129,8 +129,9 @@ public class GUIHandler : MonoBehaviour
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
-        GUILayout.Label("Time left: " + timeLeft, scoreStyle);
-        GUILayout.Label("Score: " + score, scoreStyle);
+        //GUI.Label(new Rect(20, 20, 100, 30), "Score " + score)
+        GUILayout.Label("TIME LEFT: " + timeLeft, scoreStyle);
+        GUILayout.Label("SCORE: " + score, scoreStyle);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
@@ -143,17 +144,14 @@ public class GUIHandler : MonoBehaviour
     /// <param name="container">Containing rectangle.</param>
     void DrawComboCounter(Rect container)
     {
-        int combo = gameController.GetComboCounter();
+        float combo = gameController.ComboCounter;
         GUILayout.BeginArea(container);
-        GUILayout.BeginVertical();
-        GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.BeginVertical();
-        GUILayout.Label("Combo: " + combo + "X", comboStyle);
-        GUILayout.EndVertical();
+        float colorScale = Mathf.Clamp(combo / useMaxComboColorValue, 0, 1);
+        comboStyle.normal.textColor = Color.Lerp(minComboColor, maxComboColor, colorScale);
+        GUILayout.Label("COMBO: " + Mathf.FloorToInt(combo) + "X", comboStyle);
         GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
         GUILayout.EndArea();
     }
 }
