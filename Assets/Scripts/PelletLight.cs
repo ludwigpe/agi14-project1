@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Responsible for the Pellets' pulsating lighting.
+/// </summary>
 public class PelletLight : MonoBehaviour {
 	private float theta = 0.0F;
 	public float maxRange = 3.0F;

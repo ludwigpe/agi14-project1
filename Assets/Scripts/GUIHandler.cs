@@ -6,19 +6,26 @@ using System.Collections;
 /// </summary>
 public class GUIHandler : MonoBehaviour 
 {
-    public WiiControllerHandler wiiHandler;
-
+    // Texts
     public GUIStyle endTextStyle;
     public GUIStyle scoreStyle;
     public GUIStyle comboStyle;
-
     public string winText;
     public string failText;
 
+    // Connections
+    public WiiControllerHandler wiiHandler;
     private GameController gameController;
     private HighScore scoreGUI;
+    
+    // Containers
     private Rect p1Rect;
     private Rect p2Rect;
+
+    // Combo colors
+    private Color minComboColor = Color.green;  // Color of lowest combo
+    private Color maxComboColor = Color.red;    // Color of highest combo
+    private float useMaxComboColorValue = 5F;   // Value at which the maxComboColor is used
 
 	// Use this for initialization
 	void Start () {
@@ -130,11 +137,23 @@ public class GUIHandler : MonoBehaviour
         GUILayout.EndArea();
     }
 
+    /// <summary>
+    /// Draws the current score combo.
+    /// </summary>
+    /// <param name="container">Containing rectangle.</param>
     void DrawComboCounter(Rect container)
     {
         int combo = gameController.GetComboCounter();
         GUILayout.BeginArea(container);
-        GUILayout.Label("Combo: " + combo, comboStyle);
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginVertical();
+        GUILayout.Label("Combo: " + combo + "X", comboStyle);
+        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
         GUILayout.EndArea();
     }
 }

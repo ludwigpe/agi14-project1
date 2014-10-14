@@ -9,16 +9,15 @@ using System.Runtime.InteropServices;
 /// </summary>
 public class GameController : MonoBehaviour {
 
+    // General
+    public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
+    private float inGameTimePassed;
     public bool DEBUGGING;
-    public Rect restartButton;
 
     // Connection to player object
     public GameObject playerPrefab;
     private GameObject player;
     public Transform spawnPoint;
-
-    public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
-    private float inGameTimePassed;
 
 	// Keeps track of nr of pellets left, when zero => victory
 	private int nrPelletsLeft;
@@ -35,9 +34,6 @@ public class GameController : MonoBehaviour {
     private float comboCounter;                 // Current combo value
     private float comboDecayRate = 1F;          // At which rate that the combo should decay
     private float comboIncrease = 0.75F;        // How much combo should be increased per pellet consumed
-    private Color minComboColor = Color.green;  // Color of lowest combo
-    private Color maxComboColor = Color.red;    // Color of highest combo
-    private float useMaxComboColorValue = 5F;   // Value at which the maxComboColor is used
 
     // Sound clips
     public AudioClip sound_victory;
