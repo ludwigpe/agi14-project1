@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour {
     // Combo counter
     private float comboCounter;     // Current combo value
     [Tooltip("At which rate that the combo should decay")]
-    public float comboDecayRate = 1F;
+    public float comboDecayRate = 0.85F;
     [Tooltip("How much combo should be increased per pellet consumed")]    
     public float comboIncrease = 0.75F;        
 
@@ -67,6 +67,9 @@ public class GameController : MonoBehaviour {
     /// </summary>
     void InstatiatePlayer()
     {
+        audio.Stop();   // Stop the menu music
+        GetComponent<AudioListener>().enabled = false;
+
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity) as GameObject;
         player.GetComponent<ShakeWiiControls>().gc = this;
         if (DEBUGGING)
@@ -132,6 +135,10 @@ public class GameController : MonoBehaviour {
         {
             Application.LoadLevel("start");
         }
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            ToggleMusic();
+        }
         if (!gameIsOver && gameStarted)
         {
             inGameTimePassed += Time.deltaTime;
@@ -168,6 +175,17 @@ public class GameController : MonoBehaviour {
             }
         }
 	}
+
+    /// <summary>
+    /// Mutes/Unmutes the music.
+    /// </summary>
+    private void ToggleMusic()
+    {
+        audio.mute = !audio.mute;
+        int val = (audio.mute) ? 1 : 0;
+        PlayerPrefs.SetInt("MuteMusic", val);
+        PlayerPrefs.Save();
+    }
 
     /// <summary>
     /// Check victory/losing conditions.
@@ -245,6 +263,13 @@ public class GameController : MonoBehaviour {
         comboCounter = 1f;
         scoreCounter = 0;
         inGameTimePassed = 0;
+        if( PlayerPrefs.HasKey("MuteMusic") && PlayerPrefs.GetInt("MuteMusic") == 1)
+        {
+            ToggleMusic();
+        }
+
+        GetComponent<AudioListener>().enabled = true;
+        audio.Play();   // Start the menu music
     }
 
     #region Accessors
