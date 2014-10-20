@@ -6,7 +6,8 @@ using System.Collections;
 /// </summary>
 public class Pellet_Collision : MonoBehaviour 
 {
-	public GameObject pickupParticleSystem;
+	// Effect to play on pickup
+	public GameObject pickupEffectPrefab;
 
 	// How many points one pellet is worth
 	public int scoreValue = 10;
@@ -50,7 +51,7 @@ public class Pellet_Collision : MonoBehaviour
             playSoundEffect.PlayEatPellet(comboValue);
 
 			Destroy (this.gameObject);
-			Instantiate(pickupParticleSystem, transform.position, transform.rotation);
+			Instantiate(pickupEffectPrefab, transform.position, transform.rotation);
 		}
 	}
 }
