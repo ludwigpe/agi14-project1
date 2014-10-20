@@ -6,8 +6,8 @@ using System.Collections;
 /// </summary>
 public class ParticleSystemCustom : MonoBehaviour 
 {
-	public GameObject particlePrefab;
-	public Color particleColor = Color.white;
+	public GameObject particlePrefab1;
+	public GameObject particlePrefab2;
 	public bool isContinuous = true;
 	public int particleAmount;
 	public Vector3 emitterDirection;
@@ -19,31 +19,37 @@ public class ParticleSystemCustom : MonoBehaviour
 	public Material particleMaterial;
 	public float particleLifeTime;
 
-	private ArrayList particleList = new ArrayList();
-
 	void Start () 
 	{
 		if (!isContinuous) {
 			for (int i = 0; i < particleAmount; i++) {
-				GameObject particle = (GameObject)Instantiate(particlePrefab, transform.position, transform.rotation);
-				particle.renderer.material = particleMaterial;
-				ParticleMovement particleMovement = particle.GetComponent<ParticleMovement>();
-
-				// calc particle Direction
+				// Calculate the particle's original vector for start speed
 				Vector3 tmpvector = Vector3.Cross(Random.insideUnitSphere, emitterDirection);
 				Quaternion rotation = Quaternion.AngleAxis(Random.Range(minAngle, maxAngle), tmpvector);
-				Vector3 tmpvector2 = rotation * emitterDirection;
-				tmpvector2.Normalize();
+				tmpvector = rotation * emitterDirection;
+				tmpvector.Normalize();
+				Vector3 startVector = Random.Range(minSpeed, maxSpeed) * tmpvector;
 
-				// Calculate the particle's speedVector
-				particleMovement.speedVector = Random.Range(minSpeed, maxSpeed) * tmpvector2;
-				particleMovement.lifeTime = particleLifeTime;
-				particleMovement.gravity = gravity;
-				ParticleLookAtTarget look = particle.GetComponent<ParticleLookAtTarget>();
-				look.target = Camera.main.transform;
+				CreateParticle (particlePrefab1, startVector, Camera.allCameras[1].transform); // Camera.allCameras[1].transform <-- first person camera
+				CreateParticle (particlePrefab2, startVector, Camera.main.transform);
 			}
 			Destroy(gameObject);
 		}
+	}
+
+
+	private void CreateParticle(GameObject particlePrefab, Vector3 startVector, Transform camera) 
+	{
+		GameObject particle = (GameObject)Instantiate (particlePrefab, transform.position, transform.rotation);
+		particle.renderer.material = particleMaterial;
+
+		ParticleLookAtTarget look = particle.GetComponent<ParticleLookAtTarget>();
+		look.target = camera;
+
+		ParticleMovement particleMovement = particle.GetComponent<ParticleMovement> ();
+		particleMovement.speedVector = startVector;
+		particleMovement.lifeTime = particleLifeTime;
+		particleMovement.gravity = gravity;
 	}
 
 	void Update () 
