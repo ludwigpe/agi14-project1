@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// Particle system. This component makes its GameObject act as an emitter for particles
 /// </summary>
-public class ParticleSystem : MonoBehaviour 
+public class ParticleSystemCustom : MonoBehaviour 
 {
 	public GameObject particlePrefab;
 	public Color particleColor = Color.white;
