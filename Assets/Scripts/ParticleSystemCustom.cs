@@ -16,7 +16,7 @@ public class ParticleSystemCustom : MonoBehaviour
 	public float maxAngle = 180;
 	public float minSpeed = 3;
 	public float maxSpeed = 3;
-	public Texture particleTexture;
+	public Material particleMaterial;
 	public float particleLifeTime;
 
 	private ArrayList particleList = new ArrayList();
@@ -26,7 +26,7 @@ public class ParticleSystemCustom : MonoBehaviour
 		if (!isContinuous) {
 			for (int i = 0; i < particleAmount; i++) {
 				GameObject particle = (GameObject)Instantiate(particlePrefab, transform.position, transform.rotation);
-				particle.renderer.material.SetTexture("_MainTex", particleTexture);
+				particle.renderer.material = particleMaterial;
 				ParticleMovement particleMovement = particle.GetComponent<ParticleMovement>();
 
 				// calc particle Direction
