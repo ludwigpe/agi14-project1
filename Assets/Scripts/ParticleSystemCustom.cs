@@ -30,7 +30,7 @@ public class ParticleSystemCustom : MonoBehaviour
 				tmpvector.Normalize();
 				Vector3 startVector = Random.Range(minSpeed, maxSpeed) * tmpvector;
 
-				CreateParticle (particlePrefab1, startVector, Camera.allCameras[1].transform); // Camera.allCameras[1].transform <-- first person camera
+				CreateParticle (particlePrefab1, startVector, Camera.current.transform); // Camera.current.transform <-- first person camera
 				CreateParticle (particlePrefab2, startVector, Camera.main.transform);
 			}
 			Destroy(gameObject);
