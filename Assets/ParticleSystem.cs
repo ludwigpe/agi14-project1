@@ -13,9 +13,10 @@ public class ParticleSystem : MonoBehaviour
 	public Vector3 emitterDirection;
 	public Vector3 gravity = new Vector3 (0, -10, 0);
 	public float minAngle = 0;
-	public float maxAngle = 360;
+	public float maxAngle = 180;
 	public float minSpeed = 3;
 	public float maxSpeed = 3;
+	public Texture particleTexture;
 	public float particleLifeTime;
 
 	private ArrayList particleList = new ArrayList();
@@ -25,6 +26,7 @@ public class ParticleSystem : MonoBehaviour
 		if (!isContinuous) {
 			for (int i = 0; i < particleAmount; i++) {
 				GameObject particle = (GameObject)Instantiate(particlePrefab, transform.position, transform.rotation);
+				particle.renderer.material.SetTexture("_MainTex", particleTexture);
 				ParticleMovement particleMovement = particle.GetComponent<ParticleMovement>();
 
 				// calc particle Direction
