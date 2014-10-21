@@ -131,10 +131,12 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        // START
         if(Input.GetKeyDown(KeyCode.F2))
         {
             Application.LoadLevel("start");
         }
+        // MUSIC 
         if (Input.GetKeyDown(KeyCode.F3))
         {
             ToggleMusic();

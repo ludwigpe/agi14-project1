@@ -16,10 +16,12 @@ public class IceControls : MonoBehaviour
 	private Vector3 moveDirection = Vector3.zero;
 
     // Link to components
+    public Transform emp_prefab;
     private PlaySoundEffect soundEffectManager;
     private CharacterController charController;
     private AnimationManager animationManager;
     private GameController gameController;
+
 
     // Use this for initialization
 	void Start () 
@@ -44,6 +46,12 @@ public class IceControls : MonoBehaviour
     {
         if (!gameController.ControlsDisabled)
         {
+            // EMP
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
+            }
+
             // Rotate player around y-axis
             transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
             if (charController.isGrounded)
