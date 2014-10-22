@@ -7,10 +7,7 @@ using System.Runtime.InteropServices;
 /// Wii controller handler.
 /// </summary>
 public class WiiControllerHandler : MonoBehaviour {
-
-    [DllImport ("UniWii")]
-    private static extern void wiimote_start();
-    [DllImport ("UniWii")]
+    [DllImport("UniWii")]
     private static extern void wiimote_stop();
     [DllImport ("UniWii")]
     private static extern int wiimote_count();
@@ -38,12 +35,12 @@ public class WiiControllerHandler : MonoBehaviour {
     private bool isDone = false;
 
 	// Use this for initialization
-	void Start () {
+	/*void Start () {
         int c = wiimote_count();
         if( c <= 0)
             wiimote_start();
 	}
-	
+	*/
 	// Update is called once per frame
 	void Update () {
         int c = wiimote_count();
@@ -53,13 +50,6 @@ public class WiiControllerHandler : MonoBehaviour {
             isDone = true;
         }
 	}
-
-    void OnApplicationQuit() 
-    {
-        int c = wiimote_count();
-        if( c > 0)
-            wiimote_stop();
-    }
 
     /// <summary>
     /// Display some text before controller is connected
@@ -141,6 +131,12 @@ public class WiiControllerHandler : MonoBehaviour {
         } 
 
         GUILayout.EndArea();
+    }
+
+    void OnApplicationQuit()
+    {
+        wiimote_stop();
+        Debug.Log("STOP IN WiiHandler");
     }
 
 }
