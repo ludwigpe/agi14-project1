@@ -2,14 +2,16 @@
 using System.Collections;
 
 public class ParticleMovement : MonoBehaviour {
-	public float lifeTime;
+	public float startLifeTime;
+	public float fadeOutTime;
 	public Vector3 speedVector;
 	public Vector3 gravity;
 	public bool isDead = false;
+	private float lifeTimeLeft;
 
 	// Use this for initialization
 	void Start () {
-	
+		lifeTimeLeft = startLifeTime;
 	}
 	
 	/// <summary>
@@ -18,11 +20,16 @@ public class ParticleMovement : MonoBehaviour {
 	/// </summary>
 	public void Update() {
 		if (!isDead) {
-			if (lifeTime > 0) {
+			if (lifeTimeLeft > 0) {
 				float dTime = Time.deltaTime;
-				lifeTime -= dTime;
+				lifeTimeLeft -= dTime;
 				speedVector += gravity * dTime;
 				transform.position += (speedVector * dTime);
+
+				if (lifeTimeLeft < fadeOutTime) {
+					Color c = renderer.material.color;
+					renderer.material.color = new Color(c.r, c.g, c.b, lifeTimeLeft / fadeOutTime);
+				}
 			}
 			else {
 				Kill();

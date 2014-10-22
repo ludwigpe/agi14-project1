@@ -18,6 +18,7 @@ public class ParticleSystemCustom : MonoBehaviour
 	public float maxSpeed = 3;
 	public Material particleMaterial;
 	public float particleLifeTime;
+	public float particleFadeOutTime;
 
 	void Start () 
 	{
@@ -48,7 +49,8 @@ public class ParticleSystemCustom : MonoBehaviour
 
 		ParticleMovement particleMovement = particle.GetComponent<ParticleMovement> ();
 		particleMovement.speedVector = startVector;
-		particleMovement.lifeTime = particleLifeTime;
+		particleMovement.startLifeTime = particleLifeTime;
+		particleMovement.fadeOutTime = particleFadeOutTime;
 		particleMovement.gravity = gravity;
 	}
 
