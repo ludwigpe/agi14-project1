@@ -22,6 +22,8 @@ public class ParticleSystemCustom : MonoBehaviour
 
 	void Start () 
 	{
+		Transform targetFP = GameObject.Find("Pacman").transform;
+		Transform targetTP = Camera.main.transform;
 		if (!isContinuous) {
 			for (int i = 0; i < particleAmount; i++) {
 				// Calculate the particle's original vector for start speed
@@ -30,9 +32,8 @@ public class ParticleSystemCustom : MonoBehaviour
 				tmpvector = rotation * emitterDirection;
 				tmpvector.Normalize();
 				Vector3 startVector = Random.Range(minSpeed, maxSpeed) * tmpvector;
-
-				CreateParticle (particlePrefab1, startVector, Camera.current.transform); // Camera.current.transform <-- first person camera
-				CreateParticle (particlePrefab2, startVector, Camera.main.transform);
+				CreateParticle (particlePrefab1, startVector, targetFP); // Camera.current.transform <-- first person camera
+				CreateParticle (particlePrefab2, startVector, targetTP);
 			}
 			Destroy(gameObject);
 		}
