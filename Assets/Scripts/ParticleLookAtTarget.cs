@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// <summary>
-/// This component makes the GameObject always look at the target.
+/// This component makes the particle always face the target.
 /// </summary>
 public class ParticleLookAtTarget : MonoBehaviour 
 {
