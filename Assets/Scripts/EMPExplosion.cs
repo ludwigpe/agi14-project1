@@ -14,10 +14,12 @@ public class EMPExplosion : MonoBehaviour {
     public float rotationSpeed;
     public float explosionSpeed;
     private float currScale = 0;
+    private float startedAt;
 
     // Link to explosion spheres
     public Transform empSphere01;
     public Transform empSphere02;
+    public Transform empEffect;
 
     /// <summary>
     /// Starts the EMP explosion.
@@ -25,13 +27,15 @@ public class EMPExplosion : MonoBehaviour {
     void Start()
     {
         particleSystem.Play();
+        startedAt = Time.time;
     }
    
     /// <summary>
     /// Rotates the spheres and scales them according to current scale.
     /// Will also make the explosion spheres more transperent as the explosion progresses.
     /// </summary>
-	void Update () {
+	void Update () 
+    {
         empSphere01.Rotate(Time.smoothDeltaTime * rotationSpeed, 0, 0);
         empSphere02.Rotate(Time.smoothDeltaTime * rotationSpeed, 0, 0);
 
@@ -55,8 +59,19 @@ public class EMPExplosion : MonoBehaviour {
             Vector3 newScale = new Vector3(scale, scale, scale);
             empSphere01.localScale = newScale;
             empSphere02.localScale = newScale;
+            empEffect.localScale = newScale;
 
             currScale = scale;
         }
-	}
+    }
+
+    #region Accessors
+    public float StartedAt
+    {
+        get
+        {
+            return startedAt;
+        }
+    }
+    #endregion
 }
