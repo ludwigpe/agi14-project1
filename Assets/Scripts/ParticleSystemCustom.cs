@@ -25,7 +25,7 @@ public class ParticleSystemCustom : MonoBehaviour
 		if (!isContinuous) {
 			for (int i = 0; i < particleAmount; i++) {
 				// Calculate the particle's original vector for start speed
-				Vector3 tmpvector = Vector3.Cross(Random.insideUnitSphere, emitterDirection);
+				Vector3 tmpvector = Vector3.Cross(Random.onUnitSphere, emitterDirection);
 				Quaternion rotation = Quaternion.AngleAxis(Random.Range(minAngle, maxAngle), tmpvector);
 				tmpvector = rotation * emitterDirection;
 				tmpvector.Normalize();
