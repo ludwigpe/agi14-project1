@@ -49,6 +49,7 @@ public class IceControls : MonoBehaviour
             // EMP
             if (Input.GetKeyDown(KeyCode.E))
             {
+                soundEffectManager.PlayEMPSound();
                 Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
             }
 
@@ -63,7 +64,7 @@ public class IceControls : MonoBehaviour
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
                     animationManager.PlayMoveAnimation();
-                    soundEffectManager.playMoveSound();
+                    soundEffectManager.PlayMoveSound();
                 }
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
@@ -72,12 +73,12 @@ public class IceControls : MonoBehaviour
 
                     // play brake sound, according to movement along x and z-axis
                     Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
-                    soundEffectManager.playBrakeSound(forward.magnitude);
+                    soundEffectManager.PlayBrakeSound(forward.magnitude);
                 }
                 if (Input.GetButton("Jump"))
                 {
                     moveDirection.y = jumpSpeed;
-                    soundEffectManager.playJumpSound();
+                    soundEffectManager.PlayJumpSound();
                 }
                 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);

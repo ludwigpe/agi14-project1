@@ -40,7 +40,7 @@ public class PelletCollision : MonoBehaviour
 
             float comboValue = gameController.IncreaseComboCounter();
             PlaySoundEffect playSoundEffect = other.gameObject.GetComponent<PlaySoundEffect>();
-            playSoundEffect.PlayEatPellet(comboValue);
+            playSoundEffect.PlayEatPelletSound(comboValue);
 
             Destroy(this.gameObject);
         }
