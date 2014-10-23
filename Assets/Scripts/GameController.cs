@@ -139,6 +139,10 @@ public class GameController : MonoBehaviour {
         {
             ToggleMusic();
         }
+		if (Input.GetKeyDown (KeyCode.F4)) 
+		{
+			Application.LoadLevel ("IceLevel");
+		}
         if (!gameIsOver && gameStarted)
         {
             inGameTimePassed += Time.deltaTime;
