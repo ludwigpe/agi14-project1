@@ -71,10 +71,22 @@ public class IceControls : MonoBehaviour
                     moveDirection.y = jumpSpeed;
                     soundEffectManager.playJumpSound();
                 }
-                
+
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
                 fric = fric / 100; // convert to percentage
                 moveDirection *= fric;
+            }
+            else 
+            { 
+                // pacman is mid air
+                // Check some conditions to ensure pacman can release his EMP.
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    // increase the moveDirection downwards to make it look like a forcefull impact on the ground.
+                    moveDirection.y -= 100;
+                    // Trigger the EMP effect!
+                    TriggerEMP();
+                }
             }
             moveDirection.y -= gravity * Time.deltaTime;
             charController.Move(moveDirection * Time.deltaTime);
@@ -93,5 +105,16 @@ public class IceControls : MonoBehaviour
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
         }
+    }
+
+    /// <summary>
+    /// This function will trigger pacmans EMP-effect
+    /// This will both instatiate the EMP-special effect aswell as tell the Floor to
+    /// start the shockwave
+    /// </summary>
+    void TriggerEMP()
+    {
+        GameObject.FindWithTag("Floor").GetComponent<ShockWave>().StartShockWave(this.transform.position);
+        // trigger the EMP-special effect here!
     }
 }

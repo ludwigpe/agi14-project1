@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour {
         player.GetComponent<ShakeWiiControls>().gc = this;
         if (DEBUGGING)
         {
-            player.GetComponent<ShakeWiiControls>().enabled = false;
+            //player.GetComponent<ShakeWiiControls>().enabled = false;
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
         Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
