@@ -11,7 +11,8 @@
 		_AnimPowerZ ("Animation Power Z", Float) = 0.0
 		_SelfIllum ("Illumination Power", Float) = 10.0
 		_Origin ("ShockWave Origin", Vector) = (0.0, 0.0, 0.0, 1.0)
-		_Radius ("Radius", Float) = 1.0
+		_Radius ("Radius", Float) = 100.0
+		_PowerOffset ("Power Offset", Float) = 10.0 // This is a reset timer so that the color will come back gradually
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -25,6 +26,7 @@
 		fixed4 _Color;
 		half _Shininess;
 		half _SelfIllum;
+		half _PowerOffset;
 		// animation 
 		half _AnimFreq;
 		half _AnimPowerX;
@@ -32,6 +34,7 @@
 		half _AnimPowerZ;
 		half4 _Origin;
 		half _Radius;
+		
 
 		struct Input {
 			float2 uv_MainTex;
@@ -54,7 +57,8 @@
 			half3 animPower = half3(_AnimPowerX, _AnimPowerY, _AnimPowerZ);
 			half3 offset = sin( (v.normal * x));
 			o.illumReflection = _SelfIllum * sin(x);
-			o.vColor = _Color * clamp(diff, 0, 1);
+			half cScale = clamp(abs(diff/_PowerOffset),0.0, 1.0);
+			o.vColor = _Color * pow(cScale,4) + length(offset);
 			v.vertex.xyz += offset * animPower.xyz;
 		}
 

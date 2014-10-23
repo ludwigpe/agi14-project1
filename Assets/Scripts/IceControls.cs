@@ -114,7 +114,7 @@ public class IceControls : MonoBehaviour
     /// </summary>
     void TriggerEMP()
     {
-        GameObject.FindWithTag("Floor").GetComponent<ShockWave>().StartShockWave(this.transform.position);
+        GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
         // trigger the EMP-special effect here!
     }
 }

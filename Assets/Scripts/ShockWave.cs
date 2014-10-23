@@ -11,9 +11,21 @@ public class ShockWave : MonoBehaviour {
     float radius = 0.0F;
     public float maxRadius = 100.0F;
     public float animationSpeed = 10.0F;
+    public float powerOffset = 40.0F;
+    private ArrayList shockwaveMaterials = new ArrayList();
     bool updateRadius = false;
 	// Use this for initialization
 	void Start () {
+        shockwaveMaterials.Add(GameObject.FindWithTag("Floor").renderer.material);
+        foreach (Material m in GameObject.FindWithTag("Walls").renderer.materials)
+        {
+            shockwaveMaterials.Add(m);
+        }
+        foreach (Material m in shockwaveMaterials)
+        {
+            m.SetFloat("_Radius", maxRadius);
+            m.SetFloat("_PowerOffset", powerOffset);
+        }
 	}
 	
 	// Update is called once per frame
@@ -21,7 +33,11 @@ public class ShockWave : MonoBehaviour {
         if(updateRadius)
         {
             radius += Time.deltaTime * animationSpeed;
-            renderer.material.SetFloat("_Radius", radius);
+            //renderer.material.SetFloat("_Radius", radius);
+            foreach (Material m in shockwaveMaterials)
+            {
+                m.SetFloat("_Radius", radius);
+            }
 
             if (radius > maxRadius)
             {
@@ -40,7 +56,13 @@ public class ShockWave : MonoBehaviour {
     {
         Vector4 o = new Vector4(origin.x, origin.y, origin.z);
         o.w = 1.0F;
-        renderer.material.SetVector("_Origin", o);
+        //renderer.material.SetVector("_Origin", o);
+        //renderer.material.se
+        foreach (Material m in shockwaveMaterials)
+        {
+            m.SetVector("_Origin", o);
+        }
+
         updateRadius = true;
         radius = 15.0F;
     }
