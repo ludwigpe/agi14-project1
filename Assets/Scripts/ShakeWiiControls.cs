@@ -123,7 +123,7 @@ public class ShakeWiiControls : MonoBehaviour {
                     speed = Mathf.Clamp(speed, 0, maxSpeed);
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
-                    soundEffectManager.playMoveSound();
+                    soundEffectManager.PlayMoveSound();
                 }
 
                 if (wiimote_getButtonB(0)) {
@@ -132,7 +132,7 @@ public class ShakeWiiControls : MonoBehaviour {
 
                     // play brake sound, according to movement along x and z-axis
                     Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
-                    soundEffectManager.playBrakeSound(forward.magnitude);
+                    soundEffectManager.PlayBrakeSound(forward.magnitude);
                 }
 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
@@ -145,7 +145,7 @@ public class ShakeWiiControls : MonoBehaviour {
                 {
                     if (wiimote_getButtonNunchuckZ(0) || wiimote_getButtonNunchuckC(0))
                     {
-                        soundEffectManager.playJumpSound();
+                        soundEffectManager.PlayJumpSound();
                         moveDirection.y = jumpSpeed;
                     }
                 }
@@ -153,7 +153,7 @@ public class ShakeWiiControls : MonoBehaviour {
                 {
                     if (wiimote_getButton1(1) || wiimote_getButton2(1))
                     {
-                        soundEffectManager.playJumpSound();
+                        soundEffectManager.PlayJumpSound();
                         moveDirection.y = jumpSpeed;
                     }
                 }

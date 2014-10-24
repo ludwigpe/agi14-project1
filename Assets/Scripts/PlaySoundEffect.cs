@@ -12,6 +12,7 @@ public class PlaySoundEffect : MonoBehaviour
     private AudioSource audio_source_move;
     private AudioSource audio_source_jump;
     private AudioSource audio_source_life_lost;
+    private AudioSource audio_source_emp_blast;
 
     // Audio clips
     public AudioClip audio_clip_eat_pellet;
@@ -33,7 +34,7 @@ public class PlaySoundEffect : MonoBehaviour
     void Start()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
-        if (audioSources.Length < 4)
+        if (audioSources.Length < 5)
         {
             Debug.Log("Could not find all AudioSources.");
         }
@@ -41,6 +42,7 @@ public class PlaySoundEffect : MonoBehaviour
         audio_source_move = audioSources[1];
         audio_source_jump = audioSources[2];
         audio_source_life_lost = audioSources[3];
+        audio_source_emp_blast = audioSources[4];
     }
 
     /// <summary>
@@ -63,7 +65,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// <summary>
     /// Plays the jump sound effect.
     /// </summary>
-    public void playJumpSound()
+    public void PlayJumpSound()
     {
         audio_source_jump.Play();
     }
@@ -72,7 +74,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// Tries to play the move sound effect.
     /// </summary>
     /// <returns>True if successful.</returns>
-    public bool playMoveSound()
+    public bool PlayMoveSound()
     {
         bool result = false;
         if (!audio_source_move.isPlaying)
@@ -88,7 +90,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// </summary>
     /// <param name="velMag">Magnitude of current velocity.</param>
     /// <returns>True if successful.</returns>
-    public bool playBrakeSound(float velMag)
+    public bool PlayBrakeSound(float velMag)
     {
         bool result = false;
         if (!audio_source_brake.isPlaying && !brakeSoundStarted && velMag > MIN_VEL_MAG)
@@ -122,7 +124,7 @@ public class PlaySoundEffect : MonoBehaviour
     /// </summary>
     /// <param name="currentCombo">Current combo value.</param>
     /// <returns>True if successful.</returns>
-    public void PlayEatPellet(float currentCombo)
+    public void PlayEatPelletSound(float currentCombo)
     {
         float pitch = currentCombo * PITCH_FACTOR + PITCH_CONSTANT;
         pitch = Mathf.Clamp(pitch, MIN_PITCH, MAX_PITCH);
@@ -136,5 +138,20 @@ public class PlaySoundEffect : MonoBehaviour
         
         aSource.Play();
         Destroy(tempGO, audio_clip_eat_pellet.length); 
+    }
+
+    /// <summary>
+    /// Tries to play the EMP sound effect.
+    /// </summary>
+    /// <returns>True if sucessful.</returns>
+    public bool PlayEMPSound()
+    {
+        bool result = false;
+        if (!audio_source_emp_blast.isPlaying)
+        {
+            audio_source_emp_blast.Play();
+            result = true;
+        }
+        return result;
     }
 }

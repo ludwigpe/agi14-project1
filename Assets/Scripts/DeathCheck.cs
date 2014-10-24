@@ -41,15 +41,23 @@ public class DeathCheck : MonoBehaviour
     /// <param name="collider">Collider object.</param>
     void OnControllerColliderHit(ControllerColliderHit collider)
     {
-        if (!isDead && collider.gameObject.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
+        GameObject collidee = collider.gameObject;
+
+        if (!isDead && collidee.CompareTag("Enemy") && !gameController.GameLost && !gameController.GameWon)
         {
-            CharacterController charController = GetComponent<CharacterController>();
-            charController.enabled = false;
-            gameController.ControlsDisabled = true;
+            GhostCollision collisionScript = collidee.GetComponent<GhostCollision>(); // Hard coded for now
             
-            soundEffectManager.PlayLifeLostSound();
-            animationManager.PlayDeathAnimation();
-            isDead = true;
+            // Check if collision is enabled with enemy
+            if (collisionScript.UseCollision)
+            {
+                CharacterController charController = GetComponent<CharacterController>();
+                charController.enabled = false;
+                gameController.ControlsDisabled = true;
+
+                soundEffectManager.PlayLifeLostSound();
+                animationManager.PlayDeathAnimation();
+                isDead = true;
+            }
         }
     }
 
@@ -92,6 +100,7 @@ public class DeathCheck : MonoBehaviour
         this.camera.transform.rotation = defaultPos.transform.rotation;
     }
 
+    #region Accessors
     public bool IsDead
     {
         get
@@ -103,4 +112,5 @@ public class DeathCheck : MonoBehaviour
             isDead = value;
         }
     }
+    #endregion
 }

@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour {
         player.GetComponent<ShakeWiiControls>().gc = this;
         if (DEBUGGING)
         {
-            player.GetComponent<ShakeWiiControls>().enabled = false;
+            //player.GetComponent<ShakeWiiControls>().enabled = false;
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
         Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
@@ -131,10 +131,12 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        // START
         if(Input.GetKeyDown(KeyCode.F2))
         {
             Application.LoadLevel("start");
         }
+        // MUSIC 
         if (Input.GetKeyDown(KeyCode.F3))
         {
             ToggleMusic();
@@ -356,6 +358,14 @@ public class GameController : MonoBehaviour {
         get
         {
             return comboCounter;
+        }
+    }
+
+    public GameObject PacMan
+    {
+        get
+        {
+            return player;
         }
     }
     #endregion

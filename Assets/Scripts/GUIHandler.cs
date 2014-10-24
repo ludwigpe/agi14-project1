@@ -6,6 +6,15 @@ using System.Collections;
 /// </summary>
 public class GUIHandler : MonoBehaviour 
 {
+<<<<<<< HEAD
+    // Texts
+    public GUIStyle endTextStyle;
+	public GUIStyle endScoreTextStyle;
+    public GUIStyle scoreStyle;
+    public GUIStyle comboStyle;
+    public string winText;
+    public string failText;
+=======
 	// Texts
 	public GUIStyle endTextStyle;
 	public GUIStyle endScoreTextStyle;
@@ -13,6 +22,7 @@ public class GUIHandler : MonoBehaviour
 	public GUIStyle comboStyle;
 	public string winText;
 	public string failText;
+>>>>>>> UnityPro
 	public string endScoreText;
 
     // Connections
@@ -80,6 +90,11 @@ public class GUIHandler : MonoBehaviour
                 endTextStyle.normal.textColor = Color.yellow;
                 DrawTextCenter(p1Rect, winText, endTextStyle);
                 DrawTextCenter(p2Rect, winText, endTextStyle);
+				
+				// Present the players' score
+				endScoreTextStyle.normal.textColor = Color.white;
+				DrawTextCenter(p1Rect, endScoreText+gameController.Score, endScoreTextStyle);
+				DrawTextCenter(p2Rect, endScoreText+gameController.Score, endScoreTextStyle);
 
 				// Present the players' score
 				endScoreTextStyle.normal.textColor = Color.white;
@@ -90,7 +105,6 @@ public class GUIHandler : MonoBehaviour
                 scoreGUI.RenderHighScoreList(p1Rect);
                 scoreGUI.RenderHighScoreList(p2Rect);
             }
-
         } else
         {
             // game is in session so render the score!
