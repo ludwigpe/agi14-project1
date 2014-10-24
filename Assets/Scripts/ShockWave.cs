@@ -16,6 +16,8 @@ public class ShockWave : MonoBehaviour {
     bool updateRadius = false;
 	// Use this for initialization
 	void Start () {
+
+        // get the wall and floor materials so we can set their values dynamicaly 
         shockwaveMaterials.Add(GameObject.FindWithTag("Floor").renderer.material);
         foreach (Material m in GameObject.FindWithTag("Walls").renderer.materials)
         {
