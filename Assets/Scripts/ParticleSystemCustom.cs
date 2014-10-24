@@ -53,7 +53,7 @@ public class ParticleSystemCustom : MonoBehaviour
 	private void CreateParticle(GameObject particlePrefab, Vector3 startVector, Transform target) 
 	{
 		GameObject particle = (GameObject)Instantiate (particlePrefab, transform.position, transform.rotation);
-		particle.renderer.material = particleMaterial;
+		if(particleMaterial != null) particle.renderer.material = particleMaterial;
 
 		ParticleLookAtTarget look = particle.GetComponent<ParticleLookAtTarget>();
 		look.target = target;
@@ -63,6 +63,7 @@ public class ParticleSystemCustom : MonoBehaviour
 		particleMovement.startLifeTime = particleLifeTime;
 		particleMovement.fadeOutTime = particleFadeOutTime;
 		particleMovement.gravity = gravity;
+		Destroy (particle, particleLifeTime);
 	}
 
 	/// <summary>
