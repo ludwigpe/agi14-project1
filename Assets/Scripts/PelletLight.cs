@@ -35,7 +35,7 @@ public class PelletLight : MonoBehaviour {
     /// </summary>
 	void Start () 
     {
-		lightObject = gameObject.GetComponent<Light> ();
+		lightObject = gameObject.GetComponent<Light>();
 		minIntensity = lightObject.intensity;
 		rangeAmp = (maxRange - minRange) / 2;
 		rangeOffset = (maxRange + minRange) / 2;
