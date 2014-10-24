@@ -75,6 +75,7 @@ public class ShakeWiiControls : MonoBehaviour {
     public float rotationSpeed = 10.0F;
     public float maxSpeed = 20.0F;
     public float gravity = 10.0F;
+	public GameObject collisionEffectPrefab;
 
     private Vector3 moveDirection = Vector3.zero;
     private byte centerOffset = 125;
@@ -224,6 +225,14 @@ public class ShakeWiiControls : MonoBehaviour {
             }
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
+			
+			if((mag*hit.normal).magnitude > 1 && collisionEffectPrefab != null)
+			{
+				GameObject ps = (GameObject) Instantiate(collisionEffectPrefab, hit.point, new Quaternion(0,0,0,0));
+				ParticleSystemCustom psComponent = ps.GetComponent<ParticleSystemCustom>();
+				psComponent.emitterDirection = hit.normal;
+				psComponent.maxSpeed = (mag*hit.normal).magnitude;
+			}
         }
     }
 }
