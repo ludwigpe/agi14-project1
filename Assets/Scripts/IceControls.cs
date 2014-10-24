@@ -13,6 +13,7 @@ public class IceControls : MonoBehaviour
     public float friction = 5.0F;
     public float breakPower = 10.0F;
     public float rotationSpeed = 100.0F;
+	public GameObject collisionEffectPrefab;
 	private Vector3 moveDirection = Vector3.zero;
 
     // Link to components
@@ -105,6 +106,14 @@ public class IceControls : MonoBehaviour
         {
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
+
+			if((mag*hit.normal).magnitude > 1 && collisionEffectPrefab != null)
+			{
+				GameObject ps = (GameObject) Instantiate(collisionEffectPrefab, hit.point, new Quaternion(0,0,0,0));
+				ParticleSystemCustom psComponent = ps.GetComponent<ParticleSystemCustom>();
+				psComponent.emitterDirection = hit.normal;
+				psComponent.maxSpeed = (mag*hit.normal).magnitude;
+			}
         }
     }
 
