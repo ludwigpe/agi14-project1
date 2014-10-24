@@ -10,6 +10,7 @@ public class PelletCollision : MonoBehaviour
     public int scoreValue = 10;
 
     // Links to gameobjects
+	public GameObject pickupEffectPrefab;
     private GameController gameController;
     private PelletLight pelletLight;
     private Collider empCollider;
@@ -77,6 +78,7 @@ public class PelletCollision : MonoBehaviour
             PlaySoundEffect playSoundEffect = other.gameObject.GetComponent<PlaySoundEffect>();
             playSoundEffect.PlayEatPelletSound(comboValue);
 
+			Instantiate(pickupEffectPrefab, transform.position, transform.rotation);
             Destroy(this.gameObject);
         }
     }

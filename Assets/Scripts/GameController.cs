@@ -360,5 +360,13 @@ public class GameController : MonoBehaviour {
             return comboCounter;
         }
     }
+
+    public GameObject PacMan
+    {
+        get
+        {
+            return player;
+        }
+    }
     #endregion
 }
