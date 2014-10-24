@@ -6,6 +6,7 @@ using System.Collections;
 /// </summary>
 public class GUIHandler : MonoBehaviour 
 {
+<<<<<<< HEAD
     // Texts
     public GUIStyle endTextStyle;
 	public GUIStyle endScoreTextStyle;
@@ -13,6 +14,15 @@ public class GUIHandler : MonoBehaviour
     public GUIStyle comboStyle;
     public string winText;
     public string failText;
+=======
+	// Texts
+	public GUIStyle endTextStyle;
+	public GUIStyle endScoreTextStyle;
+    public GUIStyle scoreStyle;
+	public GUIStyle comboStyle;
+	public string winText;
+	public string failText;
+>>>>>>> UnityPro
 	public string endScoreText;
 
     // Connections
@@ -20,9 +30,9 @@ public class GUIHandler : MonoBehaviour
     private GameController gameController;
     private HighScore scoreGUI;
     
-    // Containers
-    private Rect p1Rect;
-    private Rect p2Rect;
+	// Containers
+	private Rect p1Rect;
+	private Rect p2Rect;
 
     // Combo colors
     private Color minComboColor = Color.green;  // Color of lowest combo
@@ -81,6 +91,11 @@ public class GUIHandler : MonoBehaviour
                 DrawTextCenter(p1Rect, winText, endTextStyle);
                 DrawTextCenter(p2Rect, winText, endTextStyle);
 				
+				// Present the players' score
+				endScoreTextStyle.normal.textColor = Color.white;
+				DrawTextCenter(p1Rect, endScoreText+gameController.Score, endScoreTextStyle);
+				DrawTextCenter(p2Rect, endScoreText+gameController.Score, endScoreTextStyle);
+
 				// Present the players' score
 				endScoreTextStyle.normal.textColor = Color.white;
 				DrawTextCenter(p1Rect, endScoreText+gameController.Score, endScoreTextStyle);
