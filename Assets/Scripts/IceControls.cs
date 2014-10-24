@@ -22,7 +22,6 @@ public class IceControls : MonoBehaviour
     private AnimationManager animationManager;
     private GameController gameController;
 
-
     // Use this for initialization
 	void Start () 
     {
@@ -46,13 +45,6 @@ public class IceControls : MonoBehaviour
     {
         if (!gameController.ControlsDisabled)
         {
-            // EMP
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                soundEffectManager.PlayEMPSound();
-                Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
-            }
-
             // Rotate player around y-axis
             transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
             if (charController.isGrounded)
@@ -117,13 +109,14 @@ public class IceControls : MonoBehaviour
     }
 
     /// <summary>
-    /// This function will trigger pacmans EMP-effect
+    /// This function will trigger Pac-Man's EMP-effect
     /// This will both instatiate the EMP-special effect aswell as tell the Floor to
     /// start the shockwave
     /// </summary>
     void TriggerEMP()
     {
         GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
-        // trigger the EMP-special effect here!
+        soundEffectManager.PlayEMPSound();
+        Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
     }
 }
