@@ -6,14 +6,19 @@ using System.Collections;
 /// </summary>
 public class FollowTargetScript : MonoBehaviour
 {
+    // Follow Target
     public Transform target;
     public float persistentChaseDistance;		// At which distance the ghost will follow more precisely
     public float destinationUpdateFrequency;	// Amount of seconds between every update of the destination
     NavMeshAgent agent;
+    private bool followTarget = true;
 
     // GameController link
     private GameController gameController;
 
+    /// <summary>
+    /// Initializes the gameobject.
+    /// </summary>
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -33,6 +38,9 @@ public class FollowTargetScript : MonoBehaviour
         InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
     }
 
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
         // Stop idle sound when game is over
@@ -41,55 +49,54 @@ public class FollowTargetScript : MonoBehaviour
             audio.Stop();
             CancelInvoke("UpdateDestination");
         }
-
-		// Update the target destination every frame when the two objects are close to eachother
-        if (!target)
-            return;
-
-		if (Vector3.Distance(transform.position, target.position) <= persistentChaseDistance)
+        else if (followTarget)
         {
-            UpdateDestination();
+            // Update the target destination every frame when the two objects are close to eachother
+            if (!target)
+                return;
+
+            if (Vector3.Distance(transform.position, target.position) <= persistentChaseDistance)
+            {
+                UpdateDestination();
+            }
         }
 	}
+
+    /// <summary>
+    /// Will stop the agent and cancel updates to its pathfinding.
+    /// </summary>
+    public void StopFollowingTarget()
+    {
+        agent.Stop();
+        followTarget = false;
+
+        CancelInvoke("UpdateDestination");
+    }
+
+    /// <summary>
+    /// Agent resumes its following of target (and pathfinding resumes).
+    /// </summary>
+    public void ResumeFollowingTarget()
+    {
+        agent.Resume();
+        followTarget = true;
+
+        // Update target position at a slowed down frequency to simulate AI stupidity
+        InvokeRepeating("UpdateDestination", 0.0f, destinationUpdateFrequency);
+    }
 
 	/// <summary>
     /// Updates the destination for the NavMeshAgents path.
     /// </summary>
-	void UpdateDestination () 
+	void UpdateDestination() 
     {
         if (!target)
         {
             agent.SetDestination(this.transform.position);
+            Debug.Log("MY");
         } else
         {
             agent.SetDestination(target.position);
         }
 	}
-
-    /// <summary>
-    /// Ghost has collided with something.
-    /// </summary>
-    /// <param name="collision">Collision object.</param>
-    void OnCollisionEnter(Collision collision)
-    {
-        GameObject collidee = collision.gameObject;
-        if (collidee.CompareTag("Player") && !gameController.GameLost && !gameController.GameWon)
-        {
-            DeathCheck deathCheck = collision.gameObject.GetComponent<DeathCheck>();
-            if (!deathCheck.IsDead)
-            {
-                CharacterController charController = collidee.GetComponent<CharacterController>();
-                charController.enabled = false;
-                gameController.ControlsDisabled = true;
-                
-                AnimationManager animationManager = collidee.GetComponent<AnimationManager>();
-                animationManager.PlayDeathAnimation();
-                
-                PlaySoundEffect soundEffectManager = collidee.GetComponent<PlaySoundEffect>();
-                soundEffectManager.PlayLifeLostSound();
-                
-                deathCheck.IsDead = true;
-            }
-        }
-    }
 }

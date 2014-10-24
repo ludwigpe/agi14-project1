@@ -9,8 +9,15 @@ public class PelletCollision : MonoBehaviour
     // How many points one pellet is worth
     public int scoreValue = 10;
 
-    // Link to the game controller
+    // Links to gameobjects
     private GameController gameController;
+    private PelletLight pelletLight;
+    private Collider empCollider;
+
+    // EMP related
+    private bool empEncountered = false;
+    private float empStartTime;                 // Time at which EMP was created
+    private float empHitTime;                   // Time at which Pellet was hit by the EMP
 
     // Use this for initialization
     void Start()
@@ -25,6 +32,23 @@ public class PelletCollision : MonoBehaviour
             Debug.Log("Cannot find 'GameController' script");
         }
         gameController.IncrementPelletCounter();
+        pelletLight = GetComponent<PelletLight>();
+    }
+
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    void Update()
+    {
+        // Has the EMP died?
+        if (empEncountered && empCollider == null)
+        {
+            float empDestroyedTime = Time.time;
+            float timeAfterEMP = empHitTime - empStartTime;
+            float turnOnLightTime = empDestroyedTime + timeAfterEMP;
+            pelletLight.TurnOnLightAtTime(turnOnLightTime);
+            empEncountered = false;
+        }
     }
 
     /// <summary>
@@ -33,14 +57,25 @@ public class PelletCollision : MonoBehaviour
     /// <param name="other">Collider object.</param>
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        // EMP
+        if (other.gameObject.name.Equals("EMP_EFFECT"))
+        {
+            empCollider = other;
+            pelletLight.TurnOffLight();
+            
+            empEncountered = true;
+            empStartTime = empCollider.GetComponentInParent<EMPExplosion>().StartedAt;
+            empHitTime = Time.time;
+        }
+        // Pac-Man
+        else if (other.gameObject.CompareTag("Player"))
         {
             gameController.AddScore(scoreValue);
             gameController.DecrementPelletCounter();
 
             float comboValue = gameController.IncreaseComboCounter();
             PlaySoundEffect playSoundEffect = other.gameObject.GetComponent<PlaySoundEffect>();
-            playSoundEffect.PlayEatPellet(comboValue);
+            playSoundEffect.PlayEatPelletSound(comboValue);
 
             Destroy(this.gameObject);
         }

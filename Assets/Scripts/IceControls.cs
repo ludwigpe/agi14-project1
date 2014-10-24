@@ -16,10 +16,12 @@ public class IceControls : MonoBehaviour
 	private Vector3 moveDirection = Vector3.zero;
 
     // Link to components
+    public Transform emp_prefab;
     private PlaySoundEffect soundEffectManager;
     private CharacterController charController;
     private AnimationManager animationManager;
     private GameController gameController;
+
 
     // Use this for initialization
 	void Start () 
@@ -44,6 +46,13 @@ public class IceControls : MonoBehaviour
     {
         if (!gameController.ControlsDisabled)
         {
+            // EMP
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                soundEffectManager.PlayEMPSound();
+                Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
+            }
+
             // Rotate player around y-axis
             transform.Rotate(0, Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime, 0);
             if (charController.isGrounded)
@@ -55,7 +64,7 @@ public class IceControls : MonoBehaviour
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
                     animationManager.PlayMoveAnimation();
-                    soundEffectManager.playMoveSound();
+                    soundEffectManager.PlayMoveSound();
                 }
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
@@ -64,12 +73,12 @@ public class IceControls : MonoBehaviour
 
                     // play brake sound, according to movement along x and z-axis
                     Vector2 forward = new Vector2(moveDirection.x, moveDirection.z);
-                    soundEffectManager.playBrakeSound(forward.magnitude);
+                    soundEffectManager.PlayBrakeSound(forward.magnitude);
                 }
                 if (Input.GetButton("Jump"))
                 {
                     moveDirection.y = jumpSpeed;
-                    soundEffectManager.playJumpSound();
+                    soundEffectManager.PlayJumpSound();
                 }
 
                 float fric = Mathf.Clamp(100 - friction, 0, 100);
