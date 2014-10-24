@@ -6,15 +6,6 @@ using System.Collections;
 /// </summary>
 public class GUIHandler : MonoBehaviour 
 {
-<<<<<<< HEAD
-    // Texts
-    public GUIStyle endTextStyle;
-	public GUIStyle endScoreTextStyle;
-    public GUIStyle scoreStyle;
-    public GUIStyle comboStyle;
-    public string winText;
-    public string failText;
-=======
 	// Texts
 	public GUIStyle endTextStyle;
 	public GUIStyle endScoreTextStyle;
@@ -22,7 +13,6 @@ public class GUIHandler : MonoBehaviour
 	public GUIStyle comboStyle;
 	public string winText;
 	public string failText;
->>>>>>> UnityPro
 	public string endScoreText;
 
     // Connections
