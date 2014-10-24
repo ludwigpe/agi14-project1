@@ -1,33 +1,35 @@
 fileFormatVersion: 2
-guid: 7e4f470a7a2954e4e96cfc8ebcc5e28c
+guid: 0096604871af4274bb3a24ddf08ac50b
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: Camera
     100002: Cube
     100004: Floor
-    100006: Lamp
+    100006: Floor_001
     100008: //RootNode
-    100010: Outerwall
-    100012: Wall
+    100010: Point
+    100012: Sun
+    100014: Walls
     400000: Camera
     400002: Cube
     400004: Floor
-    400006: Lamp
+    400006: Floor_001
     400008: //RootNode
-    400010: Outerwall
-    400012: Wall
+    400010: Point
+    400012: Sun
+    400014: Walls
     2300000: Cube
     2300002: Floor
-    2300004: Outerwall
-    2300006: Wall
+    2300004: Floor_001
+    2300006: Walls
     3300000: Cube
     3300002: Floor
-    3300004: Outerwall
-    3300006: Wall
-    4300000: Wall
+    3300004: Floor_001
+    3300006: Walls
+    4300000: Floor_001
     4300002: Floor
-    4300004: Outerwall
+    4300004: Walls
     4300006: Cube
     7400000: Default Take
     9500000: //RootNode
@@ -50,7 +52,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .800000012
+    globalScale: .600000024
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
