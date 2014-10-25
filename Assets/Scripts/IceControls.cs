@@ -82,13 +82,18 @@ public class IceControls : MonoBehaviour
             { 
                 // pacman is mid air
                 // Check some conditions to ensure pacman can release his EMP.
-                if (Input.GetKeyDown(KeyCode.E))
+                if (gameController.IsEMPReady)
                 {
-                    // increase the moveDirection downwards to make it look like a forcefull impact on the ground.
-                    moveDirection.y -= 100;
-                    // Trigger the EMP effect!
-                    TriggerEMP();
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        // increase the moveDirection downwards to make it look like a forcefull impact on the ground.
+                        moveDirection = Vector3.zero;
+                        moveDirection.y -= 100;
+                        // Trigger the EMP effect!
+                        TriggerEMP();
+                    }    
                 }
+                
             }
             moveDirection.y -= gravity * Time.deltaTime;
             charController.Move(moveDirection * Time.deltaTime);
@@ -124,6 +129,7 @@ public class IceControls : MonoBehaviour
     /// </summary>
     void TriggerEMP()
     {
+        gameController.SavedPellets = 0;
         GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
         soundEffectManager.PlayEMPSound();
         Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);

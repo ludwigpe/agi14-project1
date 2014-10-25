@@ -38,6 +38,5 @@ public class WiiStart : MonoBehaviour {
     void OnApplicationQuit()
     {
         wiimote_stop();
-        Debug.Log("STOP IN WIISTART");
     }
 }

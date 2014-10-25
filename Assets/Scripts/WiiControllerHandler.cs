@@ -136,7 +136,6 @@ public class WiiControllerHandler : MonoBehaviour {
     void OnApplicationQuit()
     {
         wiimote_stop();
-        Debug.Log("STOP IN WiiHandler");
     }
 
 }

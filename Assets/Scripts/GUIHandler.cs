@@ -11,6 +11,7 @@ public class GUIHandler : MonoBehaviour
 	public GUIStyle endScoreTextStyle;
     public GUIStyle scoreStyle;
 	public GUIStyle comboStyle;
+    public GUIStyle empStyle;
 	public string winText;
 	public string failText;
 	public string endScoreText;
@@ -105,6 +106,8 @@ public class GUIHandler : MonoBehaviour
             DrawScoreAndTime(p2Rect, timeLeft, score, scoreStyle);
             DrawComboCounter(p1Rect);
             DrawComboCounter(p2Rect);
+            DrawEMPStatus(p1Rect);
+            DrawEMPStatus(p2Rect);
         }
 
         if (gameController.DEBUGGING)
@@ -168,6 +171,32 @@ public class GUIHandler : MonoBehaviour
         float colorScale = Mathf.Clamp(combo / useMaxComboColorValue, 0, 1);
         comboStyle.normal.textColor = Color.Lerp(minComboColor, maxComboColor, colorScale);
         GUILayout.Label("COMBO: " + Mathf.FloorToInt(combo) + "X", comboStyle);
+        GUILayout.EndHorizontal();
+        GUILayout.EndArea();
+    }
+    /// <summary>
+    /// Draw the status of the EMP. 
+    /// </summary>
+    /// <param name="container"></param>
+    void DrawEMPStatus(Rect container)
+    {
+        float combo = gameController.ComboCounter;
+        int savedPellets = gameController.SavedPellets;
+        GUILayout.BeginArea(container);
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+       
+        if (gameController.IsEMPReady)
+        {
+            empStyle.normal.textColor = minComboColor;
+            GUILayout.Label("EMP Ready",  empStyle);
+        }
+        else
+        {
+            empStyle.normal.textColor = maxComboColor;
+            GUILayout.Label("EMP not ready", empStyle);
+        }
+        
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }

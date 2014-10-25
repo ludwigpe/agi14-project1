@@ -75,23 +75,40 @@ public class ShakeWiiControls : MonoBehaviour {
     public float rotationSpeed = 10.0F;
     public float maxSpeed = 20.0F;
     public float gravity = 10.0F;
+    public int EMPThreshold = 90;
 	public GameObject collisionEffectPrefab;
 
+    public Transform emp_prefab;
     private Vector3 moveDirection = Vector3.zero;
     private byte centerOffset = 125;
     private PlaySoundEffect soundEffectManager;
     private bool wiimote1Available = false;
     private bool wiimote2Available = false;
+    private GameController gameController;
+    private CharacterController charController;
+    private AnimationManager animationManager;
 
     // Use this for initialization
     void Start () 
     {
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
+        else
+        {
+            Debug.Log("Cannot find 'GameController' script");
+        }
+        // this is an ugly hack to get the pellet collision working properly.
+        moveDirection = transform.forward * 0.1F;
+        animationManager = GetComponent<AnimationManager>();
         soundEffectManager = GetComponent<PlaySoundEffect>();
+        charController = GetComponent<CharacterController>();
     }
     
     void Update () 
     {
-        CharacterController controller = GetComponent<CharacterController>();
         wiimote1Available = wiimote_available(0);
         wiimote2Available = wiimote_available(1);
         // Rotate player around y-axis
@@ -116,7 +133,7 @@ public class ShakeWiiControls : MonoBehaviour {
             }
 
 
-            if (controller.isGrounded) {
+            if (charController.isGrounded) {
                 moveDirection.y = 0;
                 if (maxAcc > flickThreshold)
                 {   
@@ -124,6 +141,7 @@ public class ShakeWiiControls : MonoBehaviour {
                     speed = Mathf.Clamp(speed, 0, maxSpeed);
                     Vector3 force = transform.forward * speed * Time.deltaTime;
                     moveDirection += force;
+                    animationManager.PlayMoveAnimation();
                     soundEffectManager.PlayMoveSound();
                 }
 
@@ -159,9 +177,29 @@ public class ShakeWiiControls : MonoBehaviour {
                     }
                 }
             }
+            else
+            {
+                // pacman is mid air
+                // Check some conditions to ensure pacman can release his EMP.
+                if (gameController.IsEMPReady)
+                {
+                    int accZ2 = Mathf.Abs(wiimote_getAccZ(1) - centerOffset);
+                    Debug.Log(accZ + " " + accZ2);
+                    Debug.Log("thresh: " + EMPThreshold);
+                    if (accZ >= EMPThreshold && accZ2 >= EMPThreshold)
+                    {
+                        // increase the moveDirection downwards to make it look like a forcefull impact on the ground.
+                        moveDirection = Vector3.zero;
+                        moveDirection.y -= 100;
+                        // Trigger the EMP effect!
+                        TriggerEMP();
+                    }
+                }
+
+            }
 
             moveDirection.y -= gravity * Time.deltaTime;
-            controller.Move(moveDirection * Time.deltaTime);
+            charController.Move(moveDirection * Time.deltaTime);
         }
     }
 
@@ -215,14 +253,7 @@ public class ShakeWiiControls : MonoBehaviour {
     {
         if(hit.gameObject.name.Equals("Walls"))
         {
-            float speed = Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2);
-            if( speed > 1 )
-            {
-                if(wiimote1Available)
-                {
-//                    wiimote_rumble(0, 1.0f);
-                }
-            }
+
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
 			
@@ -234,5 +265,18 @@ public class ShakeWiiControls : MonoBehaviour {
 				psComponent.maxSpeed = (mag*hit.normal).magnitude;
 			}
         }
+    }
+
+    /// <summary>
+    /// This function will trigger Pac-Man's EMP-effect
+    /// This will both instatiate the EMP-special effect aswell as tell the Floor to
+    /// start the shockwave
+    /// </summary>
+    void TriggerEMP()
+    {
+        gameController.SavedPellets = 0;
+        GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
+        soundEffectManager.PlayEMPSound();
+        Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
     }
 }
