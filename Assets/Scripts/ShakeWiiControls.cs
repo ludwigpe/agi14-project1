@@ -112,7 +112,7 @@ public class ShakeWiiControls : MonoBehaviour {
         wiimote1Available = wiimote_available(0);
         wiimote2Available = wiimote_available(1);
         // Rotate player around y-axis
-        if (wiimote1Available) {
+        if (wiimote1Available && !gameController.ControlsDisabled) {
 
             int accX = Mathf.Abs( wiimote_getAccX(0) - centerOffset);
             int accY = Mathf.Abs( wiimote_getAccY(0) - centerOffset);
