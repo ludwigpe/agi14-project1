@@ -52,7 +52,7 @@ body {
   height: 20%;
 
 }
-.thumbnail >img {
+/*.thumbnail >img {
   display: block;
   height: auto;
   max-width: 100%;
@@ -60,6 +60,6 @@ body {
   max-height: 200px;
   line-height: 1;
   width: 100%; // Add this
-}
+}*/
 
 
