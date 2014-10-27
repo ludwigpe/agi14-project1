@@ -374,6 +374,10 @@ public class GameController : MonoBehaviour {
         {
             return comboCounter;
         }
+		set
+		{
+			comboCounter = value;
+		}
     }
 
     public GameObject PacMan

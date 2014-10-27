@@ -275,6 +275,7 @@ public class ShakeWiiControls : MonoBehaviour {
     void TriggerEMP()
     {
         gameController.SavedPellets = 0;
+		gameController.ComboCounter = 0.0f;
         GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
         soundEffectManager.PlayEMPSound();
         Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);
