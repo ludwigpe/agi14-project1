@@ -23,7 +23,9 @@ public class IceControls : MonoBehaviour
     private AnimationManager animationManager;
     private GameController gameController;
 
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
 	void Start () 
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");

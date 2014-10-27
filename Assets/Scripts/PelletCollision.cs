@@ -20,7 +20,9 @@ public class PelletCollision : MonoBehaviour
     private float empStartTime;                 // Time at which EMP was created
     private float empHitTime;                   // Time at which Pellet was hit by the EMP
 
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");

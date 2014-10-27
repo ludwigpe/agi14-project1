@@ -31,7 +31,9 @@ public class HighScore : MonoBehaviour
     private int maxScoreNameLength = 20;    // Max characters that score name entry can consist of
     private string levelName;
 
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
@@ -46,7 +48,9 @@ public class HighScore : MonoBehaviour
         levelName = Application.loadedLevelName;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
         if (inputName)

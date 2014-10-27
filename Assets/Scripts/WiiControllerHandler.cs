@@ -34,13 +34,6 @@ public class WiiControllerHandler : MonoBehaviour {
     public Texture2D foregroundImg;
     private bool isDone = false;
 
-	// Use this for initialization
-	/*void Start () {
-        int c = wiimote_count();
-        if( c <= 0)
-            wiimote_start();
-	}
-	*/
 	// Update is called once per frame
 	void Update () {
         int c = wiimote_count();
@@ -129,13 +122,14 @@ public class WiiControllerHandler : MonoBehaviour {
             
             GUILayout.Label("Battery: " + battery);
         } 
-
         GUILayout.EndArea();
     }
 
+    /// <summary>
+    /// Executed when the application is shut down.
+    /// </summary>
     void OnApplicationQuit()
     {
         wiimote_stop();
     }
-
 }

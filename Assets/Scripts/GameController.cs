@@ -134,7 +134,9 @@ public class GameController : MonoBehaviour {
         }
     }
 
-	// Update is called once per frame
+	/// <summary>
+    /// Update is called once per frame
+	/// </summary>
 	void Update ()
     {
         // START

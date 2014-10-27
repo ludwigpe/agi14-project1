@@ -13,7 +13,9 @@ public class FloorScript : MonoBehaviour {
     private GameController gameController;
     private Dictionary<Vector3, bool> positions;
 	
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
 	void Start () 
     {
         positions = new Dictionary<Vector3, bool>();
@@ -102,5 +104,4 @@ public class FloorScript : MonoBehaviour {
         }
         return numPellets;
     }
-
 }

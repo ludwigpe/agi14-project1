@@ -10,13 +10,6 @@ public class AnimationManager : MonoBehaviour
     // Connection to animation
     private Animation animations;
     private string currentlyPlaying = "";
-
-	/// <summary>
-	/// Initializes the animation manager.
-	/// </summary>
-	void Start () 
-    {
-	}
 	
 	/// <summary>
 	/// Update is called once per frame.

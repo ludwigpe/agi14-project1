@@ -30,7 +30,9 @@ public class GUIHandler : MonoBehaviour
     private Color maxComboColor = Color.red;    // Color of highest combo
     private float useMaxComboColorValue = 5F;   // Value at which the maxComboColor is used
 
-	// Use this for initialization
+	/// <summary>
+    /// Use this for initialization
+	/// </summary>
 	void Start () {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         if (gameControllerObject != null)
@@ -75,7 +77,8 @@ public class GUIHandler : MonoBehaviour
                 // the player has won or lost the game. Present the highscore list
                 scoreGUI.RenderHighScoreList(p1Rect);
                 scoreGUI.RenderHighScoreList(p2Rect);
-            } else if (gameController.GameWon)
+            } 
+            else if (gameController.GameWon)
             {
                 // the game is win. Draw winText to both viewports in yellow.
                 endTextStyle.normal.textColor = Color.yellow;
@@ -96,7 +99,8 @@ public class GUIHandler : MonoBehaviour
                 scoreGUI.RenderHighScoreList(p1Rect);
                 scoreGUI.RenderHighScoreList(p2Rect);
             }
-        } else
+        } 
+        else
         {
             // game is in session so render the score!
             scoreStyle.normal.textColor = Color.white;
@@ -149,7 +153,6 @@ public class GUIHandler : MonoBehaviour
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
-        //GUI.Label(new Rect(20, 20, 100, 30), "Score " + score)
         GUILayout.Label("TIME LEFT: " + timeLeft, scoreStyle);
         GUILayout.Label("SCORE: " + score, scoreStyle);
         GUILayout.EndVertical();
@@ -196,7 +199,6 @@ public class GUIHandler : MonoBehaviour
             empStyle.normal.textColor = maxComboColor;
             GUILayout.Label("EMP not ready", empStyle);
         }
-        
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }

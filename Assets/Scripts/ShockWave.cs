@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// This script is responsible for starting and stopping the shockwave.
 /// It updates the radius of the shockwave so the shader knows how far the blast
-/// has gone. It will be triggered by pacman
+/// has gone. It will be triggered by Pac-Man.
 /// </summary>
 public class ShockWave : MonoBehaviour {
 
@@ -14,7 +14,10 @@ public class ShockWave : MonoBehaviour {
     public float powerOffset = 40.0F;
     private ArrayList shockwaveMaterials = new ArrayList();
     bool updateRadius = false;
-	// Use this for initialization
+	
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
 	void Start () {
 
         // get the wall and floor materials so we can set their values dynamicaly 
@@ -30,7 +33,9 @@ public class ShockWave : MonoBehaviour {
         }
 	}
 	
-	// Update is called once per frame
+	/// <summary>
+    /// Update is called once per frame
+	/// </summary>
 	void Update () {
         if(updateRadius)
         {
@@ -79,6 +84,5 @@ public class ShockWave : MonoBehaviour {
         {
             m.SetFloat("_Radius", radius);
         }
-
     }
 }

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Responsible for the particle's movement.
+/// </summary>
 public class ParticleMovement : MonoBehaviour 
 {
 	public float startLifeTime;
@@ -9,7 +12,9 @@ public class ParticleMovement : MonoBehaviour
 	public Vector3 gravity;
 	private float lifeTimeLeft;
 
-	// Use this for initialization
+	/// <summary>
+    /// Use this for initialization
+	/// </summary>
 	void Start () 
     {
 		lifeTimeLeft = startLifeTime;
