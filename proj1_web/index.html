@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>2Pacs</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <!-- Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- JQuery libraries -->
+  <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+  <!-- Bootstrap libraries -->
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <!-- Misc libraries -->
+  <script type="text/javascript" charset="utf-8" src="js/constants.js"></script>
+  <script type="text/javascript" charset="utf-8" src="js/script.js"></script>
+
+
+</head>
+<body>
+  <div id="container" class="container-fluid col-xs-10 col-xs-offset-1">
+
+  <!-- Nav tabs -->
+<ul class="nav nav-pills nav-justified navbar-default" role="tablist">
+  <li class="active"><a href="#About" role="tab" data-toggle="tab">About</a></li>
+  <li><a href="#tech" role="tab" data-toggle="tab">Technologies</a></li>
+  <li><a href="#challanges" role="tab" data-toggle="tab">Challanges</a></li>
+  <li><a href="#lessons" role="tab" data-toggle="tab">Lessons Learned</a></li>
+  <li><a href="#media" role="tab" data-toggle="tab">Media</a></li>
+  <li><a href="#team" role="tab" data-toggle="tab">Team</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+<!-- ABOUT START -->
+  <div class="tab-pane active" id="About">
+      <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>What is 2pacs</h3>
+
+          </div>
+          <div class="panel-body">
+            <p>
+            2Pacs is a collaborative game where two players armed with wii motes control a deranged Pac-man across a labyrinthine landscape while ghosts give endless chase. Each player has their own controller and view of the game and, together, they embody 2Pac.
+            </p>
+            <p>
+            What we wanted to create was a simple and fun game that empheises teamwork and communication. We wanted to get back to
+            the roots of multiplayer games in a local setting but still make it relevant to todays technologies. That is why we chose
+            to create a game where two people control one body. Both players also has different view of the environment and thus have
+            different information about their suroundings. This forces the players to communicate in order to survive and collect more pellets.
+            </p>
+
+            <div class="row">
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/ff1.jpg" alt="Forskarfredag">
+              </div>
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/s2.png" alt="Forskarfredag" >
+              </div>
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/s4.png" alt="Forskarfredag" >
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ABOUT END -->
+  <!-- TECH START -->
+  <div class="tab-pane" id="tech">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>Technologies</h3>
+          </div>
+          <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-2">
+              <img class="img-responsive" src="images/unity.png" alt="Unity">
+            </div>
+            <div class="col-xs-10">
+              <h4>Unity</h4>
+              <p>
+                Unity is a game engine we chose to use since it enables us to focus on the content and fast prototyping.
+                With Unity it is simple to create a project without having to set up a lot of boilerplate application settings.
+                It also enabled us to use a plugin in order to use the Wiimotes as controllers.
+
+                <h5> Tron Theme</h5>
+                <p>We knew we wanted a Tron like theme for one of the levels and in order to achieve that sort of look we investigated
+                in glow effects and Bloom technology. It turns out that Unity already had a script that enables Bloom effect but it can get
+                very overexagerated if you have a directional light in the scene since a lot of pixels will be lit and thus smeared out over
+                several neighboring pixels. This led to us having to investigate with self-illuminated materials in order to avoid directional lighting.
+                </p>
+
+                <p>
+                  All of the materials in the scene use a self-illuminated shader which makes the scene look like it has some ambient light. It also gives a nice effect together with the Bloom-effect whenever there is a light source directyl hitting the bright areas of the material. This creates some cool effects when Pacman is right on the bright edges of textures.
+                </p>
+                <h5>Particle effects</h5>
+                <p>
+                One of the things we put a lot of graphical effort into were the particle effects.. There is a built in particle effect system in Unity but for the sake of learning, we implemented our own. From that particle system we can create particle effects easily as we see fit. We use it whenever a pellet dissapears and when Pacman hits a wall with high velociry.
+
+                </p>
+                <h5>EMP-blast</h5>
+                <p>
+                  What better way to play with graphical effects than an EMP-blast? The EMP-blast consists of two main parts.
+                  The first one is a particle effect and texture animation for simulating an omni-sphere blast radiatiing out.
+                  The second is a vertex-displacement shader that creates a ripple-effect on the ground radiating out. Whenever
+                  the EMP is triggered out materials go dark in order to simulate the loss of power in all of the surroundings.
+                </p>
+              </p>
+              <div class="row">
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/particles.png" alt="Forskarfredag">
+              </div>
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/emp2.png" alt="Forskarfredag" >
+              </div>
+              <div class="col-xs-4 thumbnail">
+                <img class="img-responsive img-rounded" src="images/emp4.png" alt="Forskarfredag" >
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-2">
+              <img class="img-responsive" src="images/3dmax.png" alt="Blender">
+            </div>
+            <div class="col-xs-10">
+              <h4>3ds Max</h4>
+              <p>
+                3ds Max is a modeling software we used for modeling and animating the characters in the game.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-2">
+              <img class="img-responsive" src="images/blender.png" alt="Blender">
+            </div>
+            <div class="col-xs-10">
+              <h4>Blender</h4>
+              <p>
+                Blender is a free and open source 3D modeling software that we used to create the Levels for the game
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-2">
+              <img class="img-responsive" src="images/wiimote.gif" alt="wiimote">
+            </div>
+            <div class="col-xs-10">
+              <h4>Wii Motes</h4>
+              <p>
+                The wiimotes are used as controls in 2Pacs. They are easy and intuitive to use for players of all ages. Even people who don't play a lot of video games could quickly get the hang of the controls which is great and something we value a lot.
+              </p>
+
+              <p>
+              One of the players will see from a third-person perspective and controls the speed and movement forward of the character by shaking the controller. The more you shake the faster the character will go. The second player with a first-person perspective is in control of the direction of the character. By turning the wiimote the character will also turn in the same direction. This player is also responsible for jumping over holes and ghosts but must coordinate with the other player to do so successfully. When the players get inte a difficult situation and must escapethe ghosts they can realse an EMP but have to coordinate and trigger it simultaneously by jumping and smashing the controller downwards.
+              </p>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- TECH END -->
+  <!-- CHALLANGES START -->
+  <div class="tab-pane" id="challanges">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>Challanges and Obstacles</h3>
+          </div>
+          <div class="panel-body">
+          <h4>Wii support</h4>
+          <p>
+            One of our biggest challanges was just to get the technology working. The wiimotes communicate through bluetooth and there is not a free and easy way to get wiimotion support. We had to rely on a Unity plugin that has not been updated for some time and did not work bug free. The wiimotes did not always want to connect with the unity engine and was very random. Sometimes it could take 15 minutes before we got it working properly so we could test features. This lead us to have some backup plans on control schemes since we quickly wanted to be able to try new features that are not dependant on the wiimotes.
+          </p>
+
+          <h4>Difficult Levels</h4>
+          <p>
+            Another challange we had to overcome was how to balance the difficulty of the levels. In the beginning we had a level with a lot of holes in it which was way too difficult for most players and they did not get very far before dying. The lack of friction from the ground also contributed to the level of difficulty, but was something we though was good and a fair challange. What we ended up doing was simply creating a level that did not have as many holes in it and made the steering of the character the challenging part. In the end this turned out great and we saw more success from the players without leaving them unchallanged. Since the character slides around a lot, the players who were more restrictive and patient also did better in the end.
+          </p>
+
+          <h4>Pellet Collision</h4>
+          <p>
+          When people first played our game they were zig-zaging a lot due to the controls and had a hard time to pick up the pellets in the game. This was due to the collision detection beeing a little bit too strict. We knew we had to combat this somehow and we wanted it to be a little bit more unforgiving but don't just increase the hit-box of the pellets. We as a team did not like the look of consuming pellets that were not touching the player. What we did instead was to make the main character have a gravitational pull on the pellets. So whenever the player is moving close to a pellet it will start attracting it until it finaly collides with the player. This gave much better results both graphically and gameplay wise.
+          </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- CHALLANGES END -->
+  <div class="tab-pane" id="lessons">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>Lessons learned</h3>
+          </div>
+          <div class="panel-body">
+            <h3>Interaction</h3>
+            <p>
+                With the wiimotes you have to work with motion and acceleration, we learned how an accelorometer actually works and what information we can extract from it. The novel approach of shaking and looking at all the accelerometer axis worked best in the end even though we started out trying more advanced techniques. We learned that trying to overengineering things does not always give the best results.
+            </p>
+
+            <h3>Graphics</h3>
+            <p>
+                Even though Unity gaves us a lot when it comes to graphics we still had to learn how  materials and light interact and how the bloom-effect works. When creating the levels we also played around with normal maps which was something new to us. When we created the EMP-effect we had to go into lower level shaders to do vertex-displacement. In order to get the vertex-displacement shader to work with the other materials we had to write the shading for self-illuminated surfaces and texture mapping aswell.
+            </p>
+            <p>
+                Another area that we learned a great deal from was particle effects. Since we did not rely on Unity's own implementation we had to learn and figure out ourselves how it works and some best practises. Even though our implementation might not be the best or most efficient we did do it ourselves and we will be able to improve it in the future.
+            </p>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>Related work</h3>
+          </div>
+          <div class="panel-body">
+          <ul>
+            <li>Reeves, W. T. (1983, July). Particle systems—a technique for modeling a class of fuzzy objects. In ACM SIGGRAPH Computer Graphics (Vol. 17, No. 3, pp. 359-375). ACM.</li>
+            <li>
+              Yngve, G. D., O'Brien, J. F., & Hodgins, J. K. (2000, July). Animating explosions. In Proceedings of the 27th annual conference on Computer graphics and interactive techniques (pp. 29-36). ACM Press/Addison-Wesley Publishing Co..
+            </li>
+            <li>
+              Donnelly, W. (2005). Per-pixel displacement mapping with distance functions. GPU gems, 2(22), 3.
+            </li>
+          </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MEDIA START -->
+  <div class="tab-pane" id="media">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>Media</h3>
+          </div>
+          <div class="panel-body">
+          <div class="row">
+              <div class="col-xs-8 col-xs-offset-2">
+                    <iframe width="100%" height="400" src="http://www.youtube.com/embed/6p0VqCVW1dk" frameborder="0" allowfullscreen></iframe>
+              </div>
+          </div>
+
+          </div>
+
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- MEDIA END -->
+  <!-- TEAM START -->
+  <div class="tab-pane" id="team">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3>The Team</h3>
+          </div>
+          <div class="panel-body">
+          <div class="row">
+          <!-- LINNEA START -->
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="thumbnail">
+                    <img src="images/linnea.jpg" alt="...">
+                    <div class="caption">
+                        <h3>Linnea Blom</h3>
+                        <!-- INPUT BIO HERE -->
+                        <p>Here goes text about yourself</p>
+                    </div>
+                </div>
+            </div>
+          <!-- LINNEA END -->
+          <!-- LUDIWG START -->
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="thumbnail">
+                    <img src="images/ludwig.jpg" alt="...">
+                    <div class="caption">
+                        <h3>Ludwig Pethrus Engström</h3>
+                        <p>
+                            I am a Computer science student at KTH and will graduate in the summer of 2015. I really enjoy graphics programming and really enjoyed writing shaders for this project. During this project I have mainly been working with the code for gameplay, wiimote interaction and shading. The shader was a self-illumination shader with vertex displacement animation that simulates a ripple/shockwave from the EMP.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- LUDWIG END -->
+            <!-- MATTIAS START -->
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="thumbnail">
+                    <img src="images/mattias.jpg" alt="...">
+                    <div class="caption">
+                        <h3>Mattias Lönnerberg</h3>
+                        <!-- INPUT BIO HERE -->
+                        <p>Here goes text about yourself</p>
+                    </div>
+                </div>
+            </div>
+            <!-- MATTIAS END -->
+            <!-- CHRISTOFFER START -->
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="thumbnail">
+                    <img src="images/christoffer.jpg" alt="...">
+                    <div class="caption">
+                        <h3>Christoffer Wiss</h3>
+                        <!-- INPUT BIO HERE -->
+                        <p>Here goes text about yourself</p>
+                    </div>
+                </div>
+            </div>
+            <!-- CHRISTOFFER END -->
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- TEAM END -->
+
+    <!-- END OF CONTENT -->
+  </div>
+
+</div>
+</body>
+</html>
