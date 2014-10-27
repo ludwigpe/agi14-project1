@@ -29,6 +29,7 @@ public class HighScore : MonoBehaviour
     private bool firstCharacterEnter = true; // Is the character entered the first character to be entered?
     private int takenEntryIndex;
     private int maxScoreNameLength = 20;    // Max characters that score name entry can consist of
+    private string levelName;
 
     // Use this for initialization
     void Start()
@@ -42,6 +43,7 @@ public class HighScore : MonoBehaviour
         {
             Debug.Log("Cannot find 'GameController' script");
         }
+        levelName = Application.loadedLevelName;
     }
 
     // Update is called once per frame
@@ -59,7 +61,9 @@ public class HighScore : MonoBehaviour
     /// <param name="index">HighScore entry index.</param>
     public void EnterYourName(int index)
     {
-        string name = PlayerPrefs.GetString(index + "HScoreName");
+        string currentNameKey = levelName + "HScoreName" + index;
+
+        string name = PlayerPrefs.GetString(currentNameKey);
         foreach (char c in Input.inputString)
         {
             if (c == '\b')
@@ -91,7 +95,7 @@ public class HighScore : MonoBehaviour
                 }
             }
         }
-        PlayerPrefs.SetString(index + "HScoreName", name);
+        PlayerPrefs.SetString(currentNameKey, name);
     }
 
     /// <summary>
@@ -110,15 +114,18 @@ public class HighScore : MonoBehaviour
 
         for (int i = 0; i < 10; i++)
         {
-            if (PlayerPrefs.HasKey(i + "HScore"))
+            string currentScoreKey = levelName + "HScore" + i;
+            string currentNameKey = levelName + "HScoreName" + i;
+
+            if (PlayerPrefs.HasKey(currentScoreKey))
             {
-                if (PlayerPrefs.GetInt(i + "HScore") < newScore || scoreFoundEntry && PlayerPrefs.GetInt(i + "HScore") == newScore)
+                if (PlayerPrefs.GetInt(currentScoreKey) < newScore || scoreFoundEntry && PlayerPrefs.GetInt(currentScoreKey) == newScore)
                 {
                     // New score is higher than the stored score - move old entry one step down
-                    oldScore = PlayerPrefs.GetInt(i + "HScore");
-                    oldName = PlayerPrefs.GetString(i + "HScoreName");
-                    PlayerPrefs.SetInt(i + "HScore", newScore);
-                    PlayerPrefs.SetString(i + "HScoreName", newName);
+                    oldScore = PlayerPrefs.GetInt(currentScoreKey);
+                    oldName = PlayerPrefs.GetString(currentNameKey);
+                    PlayerPrefs.SetInt(currentScoreKey, newScore);
+                    PlayerPrefs.SetString(currentNameKey, newName);
                     newScore = oldScore;
                     newName = oldName;
 
@@ -131,8 +138,8 @@ public class HighScore : MonoBehaviour
             }
             else
             {
-                PlayerPrefs.SetInt(i + "HScore", newScore);
-                PlayerPrefs.SetString(i + "HScoreName", newName);
+                PlayerPrefs.SetInt(currentScoreKey, newScore);
+                PlayerPrefs.SetString(currentNameKey, newName);
                 newScore = 0;
                 newName = "";
 
@@ -146,7 +153,10 @@ public class HighScore : MonoBehaviour
         return entryIndex;
     }
 
-
+   /// <summary>
+   /// Renders the high score list to the input container.
+   /// </summary>
+   /// <param name="container">Contaning rectangle to render to.</param>
    public void RenderHighScoreList(Rect container)
    {
         float width = Mathf.Min(500, container.width);
@@ -186,8 +196,10 @@ public class HighScore : MonoBehaviour
                 GUI.contentColor = defaultTextColor;
             }
 
-            string entryName = PlayerPrefs.GetString(i + "HScoreName");
-            int entryScore = PlayerPrefs.GetInt(i + "HScore");
+            string currentScoreKey = levelName + "HScore" + i;
+            string currentNameKey = levelName + "HScoreName" + i;
+            string entryName = PlayerPrefs.GetString(currentNameKey);
+            int entryScore = PlayerPrefs.GetInt(currentScoreKey);
 
             GUILayout.BeginHorizontal();
 

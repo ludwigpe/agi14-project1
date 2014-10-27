@@ -41,7 +41,10 @@ public class IceControls : MonoBehaviour
         soundEffectManager = GetComponent<PlaySoundEffect>();
         charController = GetComponent<CharacterController>();
 	}
-	// Update is called once per frame
+
+	/// <summary>
+    /// Update is called once per frame
+	/// </summary>
 	void Update () 
     {
         if (!gameController.ControlsDisabled)
@@ -114,6 +117,7 @@ public class IceControls : MonoBehaviour
 
 			if((mag*hit.normal).magnitude > 1 && collisionEffectPrefab != null)
 			{
+                soundEffectManager.PlayHitWallSound();
 				GameObject ps = (GameObject) Instantiate(collisionEffectPrefab, hit.point, new Quaternion(0,0,0,0));
 				ParticleSystemCustom psComponent = ps.GetComponent<ParticleSystemCustom>();
 				psComponent.emitterDirection = hit.normal;

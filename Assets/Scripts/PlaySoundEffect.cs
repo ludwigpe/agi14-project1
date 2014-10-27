@@ -16,6 +16,7 @@ public class PlaySoundEffect : MonoBehaviour
 
     // Audio clips
     public AudioClip audio_clip_eat_pellet;
+    public AudioClip audio_clip_hit_wall;
 
     private bool brakeSoundStarted = false;
     private int framesWithoutBrakeSound = 0;
@@ -123,7 +124,6 @@ public class PlaySoundEffect : MonoBehaviour
     /// Plays the eat pellet sound effect.
     /// </summary>
     /// <param name="currentCombo">Current combo value.</param>
-    /// <returns>True if successful.</returns>
     public void PlayEatPelletSound(float currentCombo)
     {
         float pitch = currentCombo * PITCH_FACTOR + PITCH_CONSTANT;
@@ -138,6 +138,14 @@ public class PlaySoundEffect : MonoBehaviour
         
         aSource.Play();
         Destroy(tempGO, audio_clip_eat_pellet.length); 
+    }
+
+    /// <summary>
+    /// Plays the hit wall sound effect.
+    /// </summary>
+    public void PlayHitWallSound()
+    {
+        AudioSource.PlayClipAtPoint(audio_clip_hit_wall, transform.position);
     }
 
     /// <summary>

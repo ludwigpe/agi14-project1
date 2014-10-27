@@ -88,7 +88,9 @@ public class ShakeWiiControls : MonoBehaviour {
     private CharacterController charController;
     private AnimationManager animationManager;
 
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
     void Start () 
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
@@ -107,10 +109,14 @@ public class ShakeWiiControls : MonoBehaviour {
         charController = GetComponent<CharacterController>();
     }
     
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update () 
     {
         wiimote1Available = wiimote_available(0);
         wiimote2Available = wiimote_available(1);
+        
         // Rotate player around y-axis
         if (wiimote1Available && !gameController.ControlsDisabled) {
 
@@ -131,7 +137,6 @@ public class ShakeWiiControls : MonoBehaviour {
                 accY = wiimote_getAccY(1) - 125;
                 transform.Rotate(0, -accY * rotationSpeed * Time.deltaTime, 0);
             }
-
 
             if (charController.isGrounded) {
                 moveDirection.y = 0;
@@ -195,9 +200,7 @@ public class ShakeWiiControls : MonoBehaviour {
                         TriggerEMP();
                     }
                 }
-
             }
-
             moveDirection.y -= gravity * Time.deltaTime;
             charController.Move(moveDirection * Time.deltaTime);
         }
@@ -253,12 +256,12 @@ public class ShakeWiiControls : MonoBehaviour {
     {
         if(hit.gameObject.name.Equals("Walls"))
         {
-
             float mag = Vector3.Dot(moveDirection, hit.normal);
             moveDirection -= (mag * hit.normal);
 			
 			if((mag*hit.normal).magnitude > 1 && collisionEffectPrefab != null)
 			{
+                soundEffectManager.PlayHitWallSound();
 				GameObject ps = (GameObject) Instantiate(collisionEffectPrefab, hit.point, new Quaternion(0,0,0,0));
 				ParticleSystemCustom psComponent = ps.GetComponent<ParticleSystemCustom>();
 				psComponent.emitterDirection = hit.normal;

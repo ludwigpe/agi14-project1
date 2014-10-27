@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
     public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
     private float inGameTimePassed;
     public bool DEBUGGING;
+    private string currentLevel;   
 
     // Connection to player object
     public GameObject playerPrefab;
@@ -143,7 +144,7 @@ public class GameController : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            Application.LoadLevel("IceLevel");
+            Application.LoadLevel("IceLevel"); 
         }
         // MUSIC 
         if (Input.GetKeyDown(KeyCode.F4))
@@ -214,7 +215,7 @@ public class GameController : MonoBehaviour {
         }
         else if (inGameTimePassed >= MAX_TIME)
         {
-            gameLost = true;
+            gameWon = true;
             MonoBehaviour[] scriptComponents = player.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scriptComponents)
             {
