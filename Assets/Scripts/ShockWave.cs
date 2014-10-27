@@ -8,7 +8,7 @@ using System.Collections;
 /// </summary>
 public class ShockWave : MonoBehaviour {
 
-    float radius = 0.0F;
+    float radius = -18.0F;
     public float maxRadius = 100.0F;
     public float animationSpeed = 10.0F;
     public float powerOffset = 40.0F;
@@ -25,7 +25,7 @@ public class ShockWave : MonoBehaviour {
         }
         foreach (Material m in shockwaveMaterials)
         {
-            m.SetFloat("_Radius", maxRadius);
+            m.SetFloat("_Radius", radius);
             m.SetFloat("_PowerOffset", powerOffset);
         }
 	}
@@ -74,5 +74,11 @@ public class ShockWave : MonoBehaviour {
     void StopShockWave()
     {
         updateRadius = false;
+        radius = -15.0F;
+        foreach (Material m in shockwaveMaterials)
+        {
+            m.SetFloat("_Radius", radius);
+        }
+
     }
 }

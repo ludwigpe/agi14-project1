@@ -55,7 +55,7 @@
 				
 			//animation
 			half3 animPower = half3(_AnimPowerX, _AnimPowerY, _AnimPowerZ);
-			half3 offset = sin( (v.normal * x));
+			half3 offset = v.normal.xyz *sin(x);
 			o.illumReflection = _SelfIllum * sin(x);
 			half cScale = clamp(abs(diff/_PowerOffset),0.0, 1.0);
 			o.vColor = _Color * pow(cScale,4) + length(offset);
