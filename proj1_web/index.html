@@ -44,18 +44,18 @@
       <div class="col-xs-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h3>What is 2pacs</h3>
+          <h3>What is 2Pacs</h3>
 
           </div>
           <div class="panel-body">
             <p>
-            2Pacs is a collaborative game where two players armed with wii motes control a deranged Pac-man across a labyrinthine landscape while ghosts give endless chase. Each player has their own controller and view of the game and, together, they embody 2Pac.
+            2Pacs is a collaborative game where two players armed with wiimotes control a deranged Pac-man across a labyrinthine landscape while ghosts give endless chase. Each player has their own controller and view of the game and, together, they embody 2Pac.
             </p>
             <p>
-            What we wanted to create was a simple and fun game that empheises teamwork and communication. We wanted to get back to
-            the roots of multiplayer games in a local setting but still make it relevant to todays technologies. That is why we chose
+            What we wanted to create was a simple and fun game that emphasises teamwork and communication. We wanted to get back to
+            the roots of multiplayer games in a local setting but still make it relevant to today's technologies. That is why we chose
             to create a game where two people control one body. Both players also has different view of the environment and thus have
-            different information about their suroundings. This forces the players to communicate in order to survive and collect more pellets.
+            different information about their surroundings. This forces the players to communicate in order to survive and collect more pellets.
             </p>
 
             <div class="row">
@@ -96,7 +96,7 @@
                 With Unity it is simple to create a project without having to set up a lot of boilerplate application settings.
                 It also enabled us to use a plugin in order to use the Wiimotes as controllers.
 
-                <h5> Tron Theme</h5>
+                <h5><strong> Tron Theme </strong></h5>
                 <p>We knew we wanted a Tron like theme for one of the levels and in order to achieve that sort of look we investigated
                 in glow effects and Bloom technology. It turns out that Unity already had a script that enables Bloom effect but it can get
                 very overexagerated if you have a directional light in the scene since a lot of pixels will be lit and thus smeared out over
@@ -104,17 +104,17 @@
                 </p>
 
                 <p>
-                  All of the materials in the scene use a self-illuminated shader which makes the scene look like it has some ambient light. It also gives a nice effect together with the Bloom-effect whenever there is a light source directyl hitting the bright areas of the material. This creates some cool effects when Pacman is right on the bright edges of textures.
+                  All of the materials in the scene use a self-illuminated shader which makes the scene look like it has some ambient light. It also gives a nice effect together with the Bloom-effect whenever there is a light source directly hitting the bright areas of the material. This creates some cool effects when Pacman is right on the bright edges of textures.
                 </p>
-                <h5>Particle effects</h5>
+                <h5><strong> Particle Effects </strong></h5>
                 <p>
                 One of the things we put a lot of graphical effort into were the particle effects.. There is a built in particle effect system in Unity but for the sake of learning, we implemented our own. From that particle system we can create particle effects easily as we see fit. We use it whenever a pellet dissapears and when Pacman hits a wall with high velociry.
 
                 </p>
-                <h5>EMP-blast</h5>
+                <h5><strong> EMP-blast </strong></h5>
                 <p>
                   What better way to play with graphical effects than an EMP-blast? The EMP-blast consists of two main parts.
-                  The first one is a particle effect and texture animation for simulating an omni-sphere blast radiatiing out.
+                  The first one is a particle effect and texture animation for simulating an omni-sphere blast radiating out.
                   The second is a vertex-displacement shader that creates a ripple-effect on the ground radiating out. Whenever
                   the EMP is triggered out materials go dark in order to simulate the loss of power in all of the surroundings.
                 </p>
@@ -161,13 +161,13 @@
               <img class="img-responsive" src="images/wiimote.gif" alt="wiimote">
             </div>
             <div class="col-xs-10">
-              <h4>Wii Motes</h4>
+              <h4>Wiimotes</h4>
               <p>
                 The wiimotes are used as controls in 2Pacs. They are easy and intuitive to use for players of all ages. Even people who don't play a lot of video games could quickly get the hang of the controls which is great and something we value a lot.
               </p>
 
               <p>
-              One of the players will see from a third-person perspective and controls the speed and movement forward of the character by shaking the controller. The more you shake the faster the character will go. The second player with a first-person perspective is in control of the direction of the character. By turning the wiimote the character will also turn in the same direction. This player is also responsible for jumping over holes and ghosts but must coordinate with the other player to do so successfully. When the players get inte a difficult situation and must escapethe ghosts they can realse an EMP but have to coordinate and trigger it simultaneously by jumping and smashing the controller downwards.
+              One of the players will see from a third-person perspective and controls the speed and movement forward of the character by shaking the controller. The more you shake the faster the character will go. The second player with a first-person perspective is in control of the direction of the character. By turning the wiimote the character will also turn in the same direction. This player is also responsible for jumping over holes and ghosts but must coordinate with the other player to do so successfully. When the players get inte a difficult situation and must escape the ghosts they can release an EMP but have to coordinate and trigger it simultaneously by jumping and smashing the controller downwards.
               </p>
             </div>
           </div>
@@ -187,9 +187,9 @@
           <h3>Challanges and Obstacles</h3>
           </div>
           <div class="panel-body">
-          <h4>Wii support</h4>
+          <h4>Wiimote Support</h4>
           <p>
-            One of our biggest challanges was just to get the technology working. The wiimotes communicate through bluetooth and there is not a free and easy way to get wiimotion support. We had to rely on a Unity plugin that has not been updated for some time and did not work bug free. The wiimotes did not always want to connect with the unity engine and was very random. Sometimes it could take 15 minutes before we got it working properly so we could test features. This lead us to have some backup plans on control schemes since we quickly wanted to be able to try new features that are not dependant on the wiimotes.
+            One of our biggest challanges was just to get the technology working. The wiimotes communicate through bluetooth and there is not a free and easy way to get wiimotion support. We had to rely on a Unity plugin that has not been updated for some time and did not work bug free. The wiimotes did not always want to connect with the unity engine and was very random. Sometimes it could take 15 minutes before we got it working properly so we could test features. This lead us to have some backup plans on control schemes since we quickly wanted to be able to try new features that are not dependent on the wiimotes.
           </p>
 
           <h4>Difficult Levels</h4>
@@ -199,7 +199,7 @@
 
           <h4>Pellet Collision</h4>
           <p>
-          When people first played our game they were zig-zaging a lot due to the controls and had a hard time to pick up the pellets in the game. This was due to the collision detection beeing a little bit too strict. We knew we had to combat this somehow and we wanted it to be a little bit more unforgiving but don't just increase the hit-box of the pellets. We as a team did not like the look of consuming pellets that were not touching the player. What we did instead was to make the main character have a gravitational pull on the pellets. So whenever the player is moving close to a pellet it will start attracting it until it finaly collides with the player. This gave much better results both graphically and gameplay wise.
+          When people first played our game they were zig-zaging a lot due to the controls and had a hard time to pick up the pellets in the game. This was due to the collision detection beeing a little bit too strict. We knew we had to combat this somehow and we wanted it to be a little bit more unforgiving but don't just increase the hit-box of the pellets. We as a team did not like the look of consuming pellets that were not touching the player. What we did instead was to make the main character have a gravitational pull on the pellets. So whenever the player is moving close to a pellet it will start attracting it until it finally collides with the player. This gave much better results both graphically and gameplay wise.
           </p>
 
           </div>
@@ -213,7 +213,7 @@
       <div class="col-xs-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h3>Lessons learned</h3>
+          <h3>Lessons Learned</h3>
           </div>
           <div class="panel-body">
             <h3>Interaction</h3>
@@ -223,10 +223,10 @@
 
             <h3>Graphics</h3>
             <p>
-                Even though Unity gaves us a lot when it comes to graphics we still had to learn how  materials and light interact and how the bloom-effect works. When creating the levels we also played around with normal maps which was something new to us. When we created the EMP-effect we had to go into lower level shaders to do vertex-displacement. In order to get the vertex-displacement shader to work with the other materials we had to write the shading for self-illuminated surfaces and texture mapping aswell.
+                Even though Unity gave us a lot when it comes to graphics we still had to learn how  materials and light interact and how the bloom-effect works. When creating the levels we also played around with normal maps which was something new to us. When we created the EMP-effect we had to go into lower level shaders to do vertex-displacement. In order to get the vertex-displacement shader to work with the other materials we had to write the shading for self-illuminated surfaces and texture mapping aswell.
             </p>
             <p>
-                Another area that we learned a great deal from was particle effects. Since we did not rely on Unity's own implementation we had to learn and figure out ourselves how it works and some best practises. Even though our implementation might not be the best or most efficient we did do it ourselves and we will be able to improve it in the future.
+                Another area that we learned a great deal from was particle effects. Since we wanted to do our own implementation we had to learn and figure out ourselves how it works and some best practises. Even though our implementation might not be the best or most efficient we did do it ourselves and we will be able to improve it in the future.
             </p>
 
 
@@ -239,7 +239,7 @@
       <div class="col-xs-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h3>Related work</h3>
+          <h3>Related Work</h3>
           </div>
           <div class="panel-body">
           <ul>
@@ -269,6 +269,10 @@
           <div class="row">
               <div class="col-xs-8 col-xs-offset-2">
                     <iframe width="100%" height="400" src="http://www.youtube.com/embed/6p0VqCVW1dk" frameborder="0" allowfullscreen></iframe>
+              </div>
+
+              <div class="col-xs-8 col-xs-offset-2">
+                    <iframe width="100%" height="400" src="http://www.youtube.com/embed/1pyF7NeVTxk" frameborder="0" allowfullscreen></iframe>
               </div>
           </div>
 
@@ -333,7 +337,11 @@
                     <div class="caption">
                         <h3>Christoffer Wiss</h3>
                         <!-- INPUT BIO HERE -->
-                        <p>Here goes text about yourself</p>
+                        <p>
+                            I am a Computer science student at KTH and will graduate in the summer of 2015. I really enjoy writing
+                            well documented code and work with improving gameplay. My contribution to this project involved some 3D
+                            models and animations (Pac-Man and Ghosts), music (theme song) and coding (audio, gameplay and the EMP-sphere effect). I was also responsible for the Behind the Scenes video that you can watch under the Media page.
+                        </p>
                     </div>
                 </div>
             </div>
