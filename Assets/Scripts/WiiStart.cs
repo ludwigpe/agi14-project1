@@ -31,7 +31,7 @@ public class WiiStart : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F5))
         { 
             // Load the game scene!
-            Application.LoadLevel("start");
+            Application.LoadLevel("TronLevel");
         }
 	}
 
