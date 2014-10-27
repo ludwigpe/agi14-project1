@@ -139,10 +139,14 @@ public class GameController : MonoBehaviour {
         // START
         if(Input.GetKeyDown(KeyCode.F2))
         {
-            Application.LoadLevel("start");
+            Application.LoadLevel("TronLevel");
+        }
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            Application.LoadLevel("IceLevel");
         }
         // MUSIC 
-        if (Input.GetKeyDown(KeyCode.F3))
+        if (Input.GetKeyDown(KeyCode.F4))
         {
             ToggleMusic();
         }
