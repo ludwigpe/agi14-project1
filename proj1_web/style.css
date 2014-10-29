@@ -10,7 +10,10 @@ body {
 
 }
 
+iframe {
 
+  padding-bottom: 30px;
+}
 #screen {
   margin-left: 1%;
   margin-right: 1%;
@@ -52,14 +55,8 @@ body {
   height: 20%;
 
 }
-/*.thumbnail >img {
-  display: block;
-  height: auto;
-  max-width: 100%;
-  min-height: 200px;
-  max-height: 200px;
-  line-height: 1;
-  width: 100%; // Add this
-}*/
+.thumbnail >img {
+  max-height: 400px;
+}
 
 
