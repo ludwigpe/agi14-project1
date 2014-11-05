@@ -88,6 +88,7 @@ public class ShakeWiiControls : MonoBehaviour {
     private CharacterController charController;
     private AnimationManager animationManager;
 
+
     /// <summary>
     /// Use this for initialization
     /// </summary>

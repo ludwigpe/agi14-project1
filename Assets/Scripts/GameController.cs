@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.IO;
 
 /// <summary>
 /// The GameController component is responsible for maintaining overall
@@ -60,6 +63,10 @@ public class GameController : MonoBehaviour {
     public Material pinky_mat;
     public Material clyde_mat;
 
+    // Log data list
+    private List<string> logStrings;
+    private StringBuilder sb;
+
 	//// <summary>
     /// Use this for initialization.
     /// </summary>
@@ -84,6 +91,12 @@ public class GameController : MonoBehaviour {
         }
         Camera.main.GetComponent<SmoothFollow>().target = player.transform;
         Camera.main.rect = new Rect(0.0F, 0.0F, 0.5F, 1.0F);
+        // create the logs directory if id does not already exist
+        if (!Directory.Exists("Logs"))
+            Directory.CreateDirectory("Logs");
+        sb.AppendLine("forward.x\tforward.z\tvelocity.x\tvelocity.y\tvelocity.z\tposition.x\tposition.y\tposition.z\tscore\tcombo\tsecondsPassed");
+        sb.Append(Application.loadedLevelName);
+        InvokeRepeating("LogPlayerData", 1.0f, 1.0f);
     }
 
     /// <summary>
@@ -166,6 +179,7 @@ public class GameController : MonoBehaviour {
 
             if (gameWon)
             {
+                WriteLogToFile();
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_victory, transform.position);
 
@@ -177,12 +191,12 @@ public class GameController : MonoBehaviour {
             }
             else if (gameLost)
             {
+                WriteLogToFile();
                 gameIsOver = true;
                 AudioSource.PlayClipAtPoint(sound_lost, transform.position);
             }
  
         }
-
         if (gameIsOver && !gameStarted)
         {
             if(Input.GetKeyDown(KeyCode.F1))
@@ -283,6 +297,8 @@ public class GameController : MonoBehaviour {
         comboCounter = 1f;
         scoreCounter = 0;
         inGameTimePassed = 0;
+        logStrings = new List<string>();
+        sb = new StringBuilder();
         if( PlayerPrefs.HasKey("MuteMusic") && PlayerPrefs.GetInt("MuteMusic") == 1)
         {
             ToggleMusic();
@@ -290,6 +306,62 @@ public class GameController : MonoBehaviour {
 
         GetComponent<AudioListener>().enabled = true;
         audio.Play();   // Start the menu music
+    }
+    /// <summary>
+    /// Appends the player log data to the List with all logged data.
+    /// </summary>
+    /// <param name="forward">Forward Vector of player.</param>
+    /// <param name="moveDir">Move direction of player.</param>
+    /// <param name="position">Position of player.</param>
+    /// <param name="score">Current player score.</param>
+    /// <param name="combo">Current player combo.</param>
+    public void LogPlayerData()
+    {
+        Vector3 forward = player.transform.forward;
+        Vector3 moveDir = player.GetComponent<CharacterController>().velocity;
+        Vector3 position = player.transform.position;
+        int combo = Mathf.FloorToInt(ComboCounter);
+        // new line
+        sb.Append("\n");
+
+        sb.Append(forward.x);
+        sb.Append("\t");
+        sb.Append(forward.z);
+
+        sb.Append("\t");
+        sb.Append(moveDir.x);
+        sb.Append("\t");
+        sb.Append(moveDir.y);
+        sb.Append("\t");
+        sb.Append(moveDir.z);
+
+        sb.Append("\t");
+        sb.Append(position.x);
+        sb.Append("\t");
+        sb.Append(position.y);
+        sb.Append("\t");
+        sb.Append(position.z);
+
+        sb.Append("\t");
+        sb.Append(Score);
+
+        sb.Append("\t");
+        sb.Append(combo);
+
+        sb.Append("\t");
+        sb.Append(inGameTimePassed);
+    }
+
+    /// <summary>
+    /// Cancels the repeating logging and writes all logged data to file.
+    /// </summary>
+    private void WriteLogToFile()
+    {
+        CancelInvoke("LogPlayerData");
+        string path ="Logs/" +  DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
+        System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+        file.Write(sb.ToString());
+        file.Close();
     }
 
     #region Accessors
