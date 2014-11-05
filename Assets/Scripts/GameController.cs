@@ -16,7 +16,8 @@ public class GameController : MonoBehaviour {
     public const int MAX_TIME = 90; // In seconds, max time that a game session is allowed to take
     private float inGameTimePassed;
     public bool DEBUGGING;
-    private string currentLevel;   
+    private string currentLevel;
+    private bool levelChangeAllowed = true;
 
     // Connection to player object
     public GameObject playerPrefab;
@@ -64,7 +65,6 @@ public class GameController : MonoBehaviour {
     public Material clyde_mat;
 
     // Log data list
-    private List<string> logStrings;
     private StringBuilder sb;
 
 	//// <summary>
@@ -152,14 +152,17 @@ public class GameController : MonoBehaviour {
 	/// </summary>
 	void Update ()
     {
-        // START
-        if(Input.GetKeyDown(KeyCode.F2))
+        if (levelChangeAllowed)
         {
-            Application.LoadLevel("TronLevel");
-        }
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            Application.LoadLevel("IceLevel"); 
+            // START
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                Application.LoadLevel("TronLevel");
+            }
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                Application.LoadLevel("IceLevel");
+            }
         }
         // MUSIC 
         if (Input.GetKeyDown(KeyCode.F4))
@@ -297,8 +300,8 @@ public class GameController : MonoBehaviour {
         comboCounter = 1f;
         scoreCounter = 0;
         inGameTimePassed = 0;
-        logStrings = new List<string>();
         sb = new StringBuilder();
+        
         if( PlayerPrefs.HasKey("MuteMusic") && PlayerPrefs.GetInt("MuteMusic") == 1)
         {
             ToggleMusic();
@@ -481,6 +484,18 @@ public class GameController : MonoBehaviour {
         set
         {
             savedPellets = value;
+        }
+    }
+
+    public bool LevelChangeAllowed
+    {
+        get
+        {
+            return LevelChangeAllowed;
+        }
+        set
+        {
+            levelChangeAllowed = value;
         }
     }
     #endregion

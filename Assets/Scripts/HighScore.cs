@@ -16,9 +16,7 @@ public class HighScore : MonoBehaviour
     public Color flashTextColor1 = Color.red;
     public Color flashTextColor2 = Color.yellow;
     public Color defaultTextColor = Color.white;
-
-    private float flashColorScale = 0f;    // Current progress of color transition
-    private float flashColorSign = 1f;     // Is the flash going to 2:nd color or back to 1:st?
+    public float flashSpeed = 5.0f;
 
     // Link to GameController
     private GameController gameController;
@@ -72,21 +70,29 @@ public class HighScore : MonoBehaviour
         {
             if (c == '\b')
             {
-                if (name.Length != 0)
+                if (firstCharacterEnter)
+                {
+                    name = "";
+                    firstCharacterEnter = false;
+                }
+                else if (name.Length != 0)
                 {
                     name = name.Substring(0, name.Length - 1);
                 }
             }
             else
             {
-                if (c == '\n' || c == '\r')
+                if ((c == '\n' || c == '\r'))
                 {
-                    inputName = false;
-                    PlayerPrefs.Save();
+                    if (!firstCharacterEnter)
+                    {
+                        inputName = false;
+                        PlayerPrefs.Save();
+                        gameController.LevelChangeAllowed = true;
+                    }
                 }
                 else if (name.Length + 1 <= maxScoreNameLength)
                 {
-
                     if (firstCharacterEnter)
                     {
                         name = c.ToString();
@@ -178,6 +184,7 @@ public class HighScore : MonoBehaviour
             {
                 inputName = true;
                 checkScore = false;
+                gameController.LevelChangeAllowed = false;
             }
         }
 
@@ -188,12 +195,8 @@ public class HighScore : MonoBehaviour
             // Mark selected entry with color
             if (inputName && i == takenEntryIndex)
             {
-                flashColorScale += Time.deltaTime * flashColorSign;
-                if (flashColorScale >= 1 || flashColorScale <= 0)
-                {
-                    flashColorSign *= -1;
-                }
-                GUI.contentColor = Color.Lerp(flashTextColor1, flashTextColor2, flashColorScale);
+                float flashScale = Mathf.PingPong(Time.time * flashSpeed, 1.0f);
+                GUI.contentColor = Color.Lerp(flashTextColor1, flashTextColor2, flashScale);
             }
             else
             {
@@ -212,6 +215,8 @@ public class HighScore : MonoBehaviour
             GUILayout.Label( entryScore.ToString(), scorePointStyle, GUILayout.Height(entryHeight));
 
             GUILayout.EndHorizontal();
+
+            GUI.contentColor = defaultTextColor; // Reset color for next text rendering
         }
         GUILayout.EndArea();
     }

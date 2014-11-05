@@ -180,11 +180,9 @@ public class GUIHandler : MonoBehaviour
     /// <summary>
     /// Draw the status of the EMP. 
     /// </summary>
-    /// <param name="container"></param>
+    /// <param name="container">Containing rectangle for text.</param>
     void DrawEMPStatus(Rect container)
     {
-        float combo = gameController.ComboCounter;
-        int savedPellets = gameController.SavedPellets;
         GUILayout.BeginArea(container);
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
