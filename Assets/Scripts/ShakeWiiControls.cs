@@ -272,14 +272,13 @@ public class ShakeWiiControls : MonoBehaviour {
     }
 
     /// <summary>
-    /// This function will trigger Pac-Man's EMP-effect
-    /// This will both instatiate the EMP-special effect aswell as tell the Floor to
-    /// start the shockwave
+    /// This function will trigger Pac-Man's EMP-effect.
+    /// This will both instatiate the EMP-special effect
+    /// aswell as tell the Floor to start the shockwave.
     /// </summary>
     void TriggerEMP()
     {
         gameController.SavedPellets = 0;
-		gameController.ComboCounter = 0.0f;
         GameObject.FindWithTag("Level1").GetComponent<ShockWave>().StartShockWave(this.transform.position);
         soundEffectManager.PlayEMPSound();
         Instantiate(emp_prefab, transform.position, emp_prefab.localRotation);

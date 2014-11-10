@@ -40,8 +40,6 @@ public class GameController : MonoBehaviour {
     public float comboDecayRate = 0.85F;
     [Tooltip("How much combo should be increased per pellet consumed")]    
     public float comboIncrease = 0.75F;
-    [Tooltip("How high of combo before player can release EMP")]   
-    public int minEMPCombo = 3;
     [Tooltip("How many pellets need to be consumed before releasing EMP")]   
     public int minEMPPellets = 10;
     private int savedPellets = 0;
@@ -470,7 +468,7 @@ public class GameController : MonoBehaviour {
     {
         get
         {
-            return (ComboCounter >= minEMPCombo || savedPellets >= minEMPPellets);
+            return (savedPellets >= minEMPPellets);
         }
     }
 
